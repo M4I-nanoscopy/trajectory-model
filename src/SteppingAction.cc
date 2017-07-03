@@ -25,12 +25,12 @@
 //
 // $Id: B1SteppingAction.cc 74483 2013-10-09 13:37:06Z gcosmo $
 //
-/// \file B1SteppingAction.cc
-/// \brief Implementation of the B1SteppingAction class
+/// \file SteppingAction.cc
+/// \brief Implementation of the SteppingAction class
 
-#include "B1SteppingAction.hh"
-#include "B1EventAction.hh"
-#include "B1DetectorConstruction.hh"
+#include "SteppingAction.hh"
+#include "EventAction.hh"
+#include "DetectorConstruction.hh"
 
 #include "G4Step.hh"
 #include "G4Event.hh"
@@ -39,7 +39,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1SteppingAction::B1SteppingAction(B1EventAction* eventAction)
+SteppingAction::SteppingAction(EventAction* eventAction)
 : G4UserSteppingAction(),
   fEventAction(eventAction),
   fScoringVolume(0)
@@ -47,16 +47,16 @@ B1SteppingAction::B1SteppingAction(B1EventAction* eventAction)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1SteppingAction::~B1SteppingAction()
+SteppingAction::~SteppingAction()
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B1SteppingAction::UserSteppingAction(const G4Step* step)
+void SteppingAction::UserSteppingAction(const G4Step* step)
 {
   if (!fScoringVolume) {
-    const B1DetectorConstruction* detectorConstruction
-      = static_cast<const B1DetectorConstruction*>
+    const DetectorConstruction* detectorConstruction
+      = static_cast<const DetectorConstruction*>
         (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
     fScoringVolume = detectorConstruction->GetScoringVolume();   
   }
@@ -64,7 +64,7 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
   // Store the post step position in the event action
   G4StepPoint *stepPoint = step->GetPostStepPoint();
   G4ThreeVector stepPointPosition = stepPoint->GetPosition();
-  B1EventAction *eventAction = (B1EventAction*) (G4RunManager::GetRunManager()->GetUserEventAction());
+  EventAction *eventAction = (EventAction*) (G4RunManager::GetRunManager()->GetUserEventAction());
   eventAction->AddTrackStep(
     step->GetTrack()->GetCurrentStepNumber(),
     stepPointPosition.getX(),

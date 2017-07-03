@@ -25,11 +25,11 @@
 //
 // $Id: exampleB1.cc 86065 2014-11-07 08:51:15Z gcosmo $
 //
-/// \file exampleB1.cc
-/// \brief Main program of the B1 example
+/// \file trajectory-model.cc
+/// \brief Main program
 
-#include "B1DetectorConstruction.hh"
-#include "B1ActionInitialization.hh"
+#include "DetectorConstruction.hh"
+#include "ActionInitialization.hh"
 
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
@@ -71,7 +71,7 @@ int main(int argc,char** argv)
   // Set mandatory initialization classes
   //
   // Detector construction
-  runManager->SetUserInitialization(new B1DetectorConstruction());
+  runManager->SetUserInitialization(new DetectorConstruction());
 
   // Physics list
   G4VModularPhysicsList* physicsList = new QGSP_BERT;
@@ -80,7 +80,7 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(physicsList);
 
   // User action initialization
-  runManager->SetUserInitialization(new B1ActionInitialization());
+  runManager->SetUserInitialization(new ActionInitialization());
 
   // Initialize visualization
   //
@@ -92,6 +92,8 @@ int main(int argc,char** argv)
   // Get the pointer to the User Interface manager
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
+
+    //runManager->Initialize();
   // Process macro or start UI session
   //
   if ( ! ui ) {

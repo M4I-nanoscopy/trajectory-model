@@ -23,55 +23,49 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1EventAction.hh 93886 2015-11-03 08:28:26Z gcosmo $
+// $Id: B1RunAction.hh 93886 2015-11-03 08:28:26Z gcosmo $
 //
-/// \file B1EventAction.hh
-/// \brief Definition of the B1EventAction class
+/// \file RunAction.hh
+/// \brief Definition of the RunAction class
 
-#ifndef B1EventAction_h
-#define B1EventAction_h 1
+#ifndef RunAction_h
+#define RunAction_h 1
 
-#include "G4UserEventAction.hh"
+#include "G4UserRunAction.hh"
+#include "G4Parameter.hh"
 #include "globals.hh"
 
 #include "H5Cpp.h"
 #ifndef H5_NO_NAMESPACE
-  using namespace H5;
+using namespace H5;
 #endif
 
-const int   FSPACE_RANK = 2;    // Dataset rank as it is stored in the file
-const int   FSPACE_DIM1 = 4096;    // Dimension sizes of the dataset as it is
-const int   FSPACE_DIM2 = 7;
+class G4Run;
 
-class B1RunAction;
-
-/// Event action class
+/// Run action class
 ///
+/// In EndOfRunAction(), it calculates the dose in the selected volume 
+/// from the energy deposit accumulated via stepping and event actions.
+/// The computed dose is then printed on the screen.
 
-class B1EventAction : public G4UserEventAction
+class RunAction : public G4UserRunAction
 {
   public:
-    B1EventAction(B1RunAction* runAction);
-    virtual ~B1EventAction();
+    RunAction();
+    virtual ~RunAction();
 
-    virtual void BeginOfEventAction(const G4Event* event);
-    virtual void EndOfEventAction(const G4Event* event);
+    // virtual G4Run* GenerateRun();
+    virtual void BeginOfRunAction(const G4Run*);
+    virtual void   EndOfRunAction(const G4Run*);
 
-    void AddEdep(G4double edep) { fEdep += edep; }
-
-    void AddTrackStep(int step, G4double x, G4double y, G4double z, G4double t, G4double energy, G4double velocity, G4double length);
+    void AddEdep (G4double edep);
+    H5File* GetOutputFile();
 
   private:
-    B1RunAction* fRunAction;
-    G4double     fEdep;
-
-    DataSet* dataSet;
-    double *trajectory;
-    int maxStep;
+    G4Parameter<G4double> fEdep;
+    G4Parameter<G4double> fEdep2;
+    H5File*file = nullptr;
 };
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
 
-    

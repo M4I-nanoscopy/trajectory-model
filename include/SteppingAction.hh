@@ -23,30 +23,42 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1ActionInitialization.hh 68058 2013-03-13 14:47:43Z gcosmo $
+// $Id: B1SteppingAction.hh 74483 2013-10-09 13:37:06Z gcosmo $
 //
-/// \file B1ActionInitialization.hh
-/// \brief Definition of the B1ActionInitialization class
+/// \file SteppingAction.hh
+/// \brief Definition of the SteppingAction class
 
-#ifndef B1ActionInitialization_h
-#define B1ActionInitialization_h 1
+#ifndef SteppingAction_h
+#define SteppingAction_h 1
 
-#include "G4VUserActionInitialization.hh"
+#include "G4UserSteppingAction.hh"
+#include "globals.hh"
 
-/// Action initialization class.
 
-class B1ActionInitialization : public G4VUserActionInitialization
+
+class EventAction;
+
+class G4LogicalVolume;
+
+/// Stepping action class
+/// 
+
+class SteppingAction : public G4UserSteppingAction
 {
   public:
-    B1ActionInitialization();
-    virtual ~B1ActionInitialization();
+    SteppingAction(EventAction* eventAction);
+    virtual ~SteppingAction();
 
-    virtual void BuildForMaster() const;
-    virtual void Build() const;
+    // method from the base class
+    virtual void UserSteppingAction(const G4Step*);
+
+  private:
+
+    EventAction*  fEventAction;
+    G4LogicalVolume* fScoringVolume;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-    

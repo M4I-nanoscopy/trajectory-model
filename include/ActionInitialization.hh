@@ -23,37 +23,30 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1DetectorConstruction.hh 69565 2013-05-08 12:35:31Z gcosmo $
+// $Id: B1ActionInitialization.hh 68058 2013-03-13 14:47:43Z gcosmo $
 //
-/// \file B1DetectorConstruction.hh
-/// \brief Definition of the B1DetectorConstruction class
+/// \file ActionInitialization.hh
+/// \brief Definition of the ActionInitialization class
 
-#ifndef B1DetectorConstruction_h
-#define B1DetectorConstruction_h 1
+#ifndef ActionInitialization_h
+#define ActionInitialization_h 1
 
-#include "G4VUserDetectorConstruction.hh"
-#include "globals.hh"
+#include "G4VUserActionInitialization.hh"
 
-class G4VPhysicalVolume;
-class G4LogicalVolume;
+/// Action initialization class.
 
-/// Detector construction class to define materials and geometry.
-
-class B1DetectorConstruction : public G4VUserDetectorConstruction
+class ActionInitialization : public G4VUserActionInitialization
 {
   public:
-    B1DetectorConstruction();
-    virtual ~B1DetectorConstruction();
+    ActionInitialization();
+    virtual ~ActionInitialization();
 
-    virtual G4VPhysicalVolume* Construct();
-    
-    G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
-
-  protected:
-    G4LogicalVolume*  fScoringVolume;
+    virtual void BuildForMaster() const;
+    virtual void Build() const;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
 
+    

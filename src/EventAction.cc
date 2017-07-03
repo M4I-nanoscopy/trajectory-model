@@ -25,19 +25,19 @@
 //
 // $Id: B1EventAction.cc 93886 2015-11-03 08:28:26Z gcosmo $
 //
-/// \file B1EventAction.cc
-/// \brief Implementation of the B1EventAction class
+/// \file EventAction.cc
+/// \brief Implementation of the EventAction class
 
 #include <G4SIunits.hh>
-#include "B1EventAction.hh"
-#include "B1RunAction.hh"
+#include "EventAction.hh"
+#include "RunAction.hh"
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1EventAction::B1EventAction(B1RunAction* runAction)
+EventAction::EventAction(RunAction* runAction)
 : G4UserEventAction(),
   fRunAction(runAction),
   fEdep(0.)
@@ -47,12 +47,12 @@ B1EventAction::B1EventAction(B1RunAction* runAction)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1EventAction::~B1EventAction()
+EventAction::~EventAction()
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B1EventAction::BeginOfEventAction(const G4Event*)
+void EventAction::BeginOfEventAction(const G4Event*)
 {    
   fEdep = 0.;
 
@@ -63,20 +63,20 @@ void B1EventAction::BeginOfEventAction(const G4Event*)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B1EventAction::EndOfEventAction(const G4Event* event)
+void EventAction::EndOfEventAction(const G4Event* event)
 {   
   // accumulate statistics in run action
   fRunAction->AddEdep(fEdep);
 
   // Get output file
-  B1RunAction *runAction = (B1RunAction*) (G4RunManager::GetRunManager()->GetUserRunAction());
+  RunAction *runAction = (RunAction*) (G4RunManager::GetRunManager()->GetUserRunAction());
   H5File* file = runAction->GetOutputFile();
 
   // Setup and write hdf5 dataset, using the EventID as dataset name
   hsize_t fDim[] = {(hsize_t) maxStep, FSPACE_DIM2};
   DataSpace fSpace( FSPACE_RANK, fDim );
-  dataSet = new DataSet(file->createDataSet(std::to_string(event->GetEventID()), PredType::NATIVE_DOUBLE, fSpace));
-  dataSet->write( trajectory, PredType::NATIVE_DOUBLE, fSpace, fSpace );
+  //dataSet = new DataSet(file->createDataSet(std::to_string(event->GetEventID()), PredType::NATIVE_DOUBLE, fSpace));
+  //dataSet->write( trajectory, PredType::NATIVE_DOUBLE, fSpace, fSpace );
 
   delete trajectory;
   //delete dataSet;
@@ -84,7 +84,7 @@ void B1EventAction::EndOfEventAction(const G4Event* event)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B1EventAction::AddTrackStep(int step, G4double x, G4double y, G4double z, G4double t, G4double energy, G4double velocity, G4double length)
+void EventAction::AddTrackStep(int step, G4double x, G4double y, G4double z, G4double t, G4double energy, G4double velocity, G4double length)
 {
   // TODO: need to handle this overflow better, not sure when it happens
   if ( step > FSPACE_DIM1 ) return;

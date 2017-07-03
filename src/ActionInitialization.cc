@@ -23,42 +23,52 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1SteppingAction.hh 74483 2013-10-09 13:37:06Z gcosmo $
+// $Id: B1ActionInitialization.cc 68058 2013-03-13 14:47:43Z gcosmo $
 //
-/// \file B1SteppingAction.hh
-/// \brief Definition of the B1SteppingAction class
+/// \file ActionInitialization.cc
+/// \brief Implementation of the ActionInitialization class
 
-#ifndef B1SteppingAction_h
-#define B1SteppingAction_h 1
-
-#include "G4UserSteppingAction.hh"
-#include "globals.hh"
-
-
-
-class B1EventAction;
-
-class G4LogicalVolume;
-
-/// Stepping action class
-/// 
-
-class B1SteppingAction : public G4UserSteppingAction
-{
-  public:
-    B1SteppingAction(B1EventAction* eventAction);
-    virtual ~B1SteppingAction();
-
-    // method from the base class
-    virtual void UserSteppingAction(const G4Step*);
-
-  private:
-
-    B1EventAction*  fEventAction;
-    G4LogicalVolume* fScoringVolume;
-
-};
+#include "ActionInitialization.hh"
+#include "PrimaryGeneratorAction.hh"
+#include "RunAction.hh"
+#include "EventAction.hh"
+#include "SteppingAction.hh"
+#include "TrackingAction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#endif
+ActionInitialization::ActionInitialization()
+ : G4VUserActionInitialization()
+{}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+ActionInitialization::~ActionInitialization()
+{}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void ActionInitialization::BuildForMaster() const
+{
+  RunAction* runAction = new RunAction;
+  SetUserAction(runAction);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void ActionInitialization::Build() const
+{
+  SetUserAction(new PrimaryGeneratorAction);
+
+  RunAction* runAction = new RunAction;
+  SetUserAction(runAction);
+  
+  EventAction* eventAction = new EventAction(runAction);
+  SetUserAction(eventAction);
+  
+  SetUserAction(new SteppingAction(eventAction));
+
+  SetUserAction(new TrackingAction(eventAction));
+}  
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
