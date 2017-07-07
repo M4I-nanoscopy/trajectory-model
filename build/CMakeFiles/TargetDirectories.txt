@@ -1,8 +1,0 @@
-/home/lucas/Internship_1A/trajectory-model/build/CMakeFiles/install.dir
-/home/lucas/Internship_1A/trajectory-model/build/CMakeFiles/list_install_components.dir
-/home/lucas/Internship_1A/trajectory-model/build/CMakeFiles/rebuild_cache.dir
-/home/lucas/Internship_1A/trajectory-model/build/CMakeFiles/edit_cache.dir
-/home/lucas/Internship_1A/trajectory-model/build/CMakeFiles/trajectory-model.dir
-/home/lucas/Internship_1A/trajectory-model/build/CMakeFiles/TRAJECTORY-MODEL.dir
-/home/lucas/Internship_1A/trajectory-model/build/CMakeFiles/install/local.dir
-/home/lucas/Internship_1A/trajectory-model/build/CMakeFiles/install/strip.dir
