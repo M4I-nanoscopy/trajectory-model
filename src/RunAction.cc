@@ -32,8 +32,6 @@
 #include "PrimaryGeneratorAction.hh"
 #include "DetectorConstruction.hh"
 // #include "Run.hh"
-#include <ctime>
-#include <string>
 #include "G4RunManager.hh"
 #include "G4Run.hh"
 #include "G4ParameterManager.hh"
@@ -48,7 +46,8 @@
 RunAction::RunAction()
 : G4UserRunAction(),
   fEdep("Edep", 0.),
-  fEdep2("Edep2", 0.)
+  fEdep2("Edep2", 0.),
+  name("output.hdf5")
 {
   // add new units for dose
   //
@@ -162,19 +161,21 @@ void RunAction::AddEdep(G4double edep)
   fEdep2 += edep*edep;
 }
 
+void RunAction::SetName(G4String st)
+{
+	name = st;
+}
+
+G4String RunAction::GetName()
+{
+	return name;
+}
+
 H5File *RunAction::GetOutputFile() {
 
   if ( file == nullptr )   {
-    time_t t = time(NULL);
-    tm* timePtr = localtime(&t);
-    std::string sec = std::to_string(timePtr->tm_sec);
-    std::string min = std::to_string(timePtr->tm_min);
-    std::string hour = std::to_string(timePtr->tm_hour);
-    std::string mday = std::to_string(timePtr->tm_mday);
-    std::string mon = std::to_string(1+(timePtr->tm_mon));
-    std::string year = std::to_string(timePtr->tm_year);
-    G4String st = year + "_" + mon + "_" + mday + "_" + hour + "_" + min + "_" + sec + ".hdf5";
-    file = new H5File(st, H5F_ACC_TRUNC);
+
+	  file = new H5File(name, H5F_ACC_TRUNC);
 
   }
 

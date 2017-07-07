@@ -60,11 +60,14 @@ class RunAction : public G4UserRunAction
 
     void AddEdep (G4double edep);
     H5File* GetOutputFile();
+    void SetName(G4String st);
+    G4String GetName();
 
   private:
     G4Parameter<G4double> fEdep;
     G4Parameter<G4double> fEdep2;
     H5File*file = nullptr;
+    G4String name;
 };
 
 #endif

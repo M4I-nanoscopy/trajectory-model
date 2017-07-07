@@ -36,7 +36,8 @@
 #else
 #include "G4RunManager.hh"
 #endif
-
+//#include "RunAction.hh"
+#include "OutputMessenger.hh"
 #include "G4UImanager.hh"
 #include "QGSP_BERT.hh"
 #include "G4StepLimiterPhysics.hh"
@@ -92,7 +93,9 @@ int main(int argc,char** argv)
   // Get the pointer to the User Interface manager
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
-
+  //OutputMessenger* mes = new OutputMessenger();
+  //mes->
+  //runManager->SetUserAction(new RunAction());
     //runManager->Initialize();
   // Process macro or start UI session
   //
