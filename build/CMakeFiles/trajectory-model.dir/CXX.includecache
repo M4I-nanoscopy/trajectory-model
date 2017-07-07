@@ -6133,10 +6133,6 @@ DetectorConstruction.hh
 /home/lucas/Internship_1A/trajectory-model/DetectorConstruction.hh
 ActionInitialization.hh
 /home/lucas/Internship_1A/trajectory-model/ActionInitialization.hh
-RunAction.hh
-/home/lucas/Internship_1A/trajectory-model/RunAction.hh
-EventAction.hh
-/home/lucas/Internship_1A/trajectory-model/EventAction.hh
 G4MTRunManager.hh
 /home/lucas/Internship_1A/trajectory-model/G4MTRunManager.hh
 G4RunManager.hh
@@ -6151,12 +6147,8 @@ G4VisExecutive.hh
 /home/lucas/Internship_1A/trajectory-model/G4VisExecutive.hh
 G4UIExecutive.hh
 /home/lucas/Internship_1A/trajectory-model/G4UIExecutive.hh
-G4SIunits.hh
--
-G4EventManager.hh
-/home/lucas/Internship_1A/trajectory-model/G4EventManager.hh
-G4Event.hh
-/home/lucas/Internship_1A/trajectory-model/G4Event.hh
+Randomize.hh
+/home/lucas/Internship_1A/trajectory-model/Randomize.hh
 
 /usr/include/hdf5/serial/H5ACpublic.h
 H5public.h

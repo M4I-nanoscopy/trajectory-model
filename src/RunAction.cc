@@ -32,7 +32,8 @@
 #include "PrimaryGeneratorAction.hh"
 #include "DetectorConstruction.hh"
 // #include "Run.hh"
-
+#include <ctime>
+#include <string>
 #include "G4RunManager.hh"
 #include "G4Run.hh"
 #include "G4ParameterManager.hh"
@@ -40,6 +41,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4String.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -163,12 +165,20 @@ void RunAction::AddEdep(G4double edep)
 H5File *RunAction::GetOutputFile() {
 
   if ( file == nullptr )   {
-    // File is not open yet
-    file = new H5File("output.hdf5", H5F_ACC_TRUNC);
+    time_t t = time(NULL);
+    tm* timePtr = localtime(&t);
+    std::string sec = std::to_string(timePtr->tm_sec);
+    std::string min = std::to_string(timePtr->tm_min);
+    std::string hour = std::to_string(timePtr->tm_hour);
+    std::string mday = std::to_string(timePtr->tm_mday);
+    std::string mon = std::to_string(1+(timePtr->tm_mon));
+    std::string year = std::to_string(timePtr->tm_year);
+    G4String st = year + "_" + mon + "_" + mday + "_" + hour + "_" + min + "_" + sec + ".hdf5";
+    file = new H5File(st, H5F_ACC_TRUNC);
+
   }
 
   return file;
 }
-
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
