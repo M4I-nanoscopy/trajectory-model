@@ -36,7 +36,7 @@
 #else
 #include "G4RunManager.hh"
 #endif
-//#include "RunAction.hh"
+#include "RunAction.hh"
 #include "OutputMessenger.hh"
 #include "G4UImanager.hh"
 #include "QGSP_BERT.hh"
@@ -79,10 +79,11 @@ int main(int argc,char** argv)
   physicsList->RegisterPhysics(new G4StepLimiterPhysics());
   physicsList->SetVerboseLevel(0);
   runManager->SetUserInitialization(physicsList);
-
+  RunAction * runAct = new RunAction();
+  runManager->SetUserAction(runAct);
   // User action initialization
   runManager->SetUserInitialization(new ActionInitialization());
-
+  OutputMessenger * mes = new OutputMessenger();
   // Initialize visualization
   //
   G4VisManager* visManager = new G4VisExecutive;
@@ -92,10 +93,7 @@ int main(int argc,char** argv)
 
   // Get the pointer to the User Interface manager
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
-
-  //OutputMessenger* mes = new OutputMessenger();
-  //mes->
-  //runManager->SetUserAction(new RunAction());
+  //mes->GetCurrentValue("/run/output ");
     //runManager->Initialize();
   // Process macro or start UI session
   //
@@ -119,6 +117,7 @@ int main(int argc,char** argv)
 
   delete visManager;
   delete runManager;
+  delete mes;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

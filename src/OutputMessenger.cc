@@ -50,7 +50,7 @@ G4String OutputMessenger::GetCurrentValue(G4UIcommand * command)
   G4String cv;
   if( command==nameCmd )
   {
-	  cv = nameCmd->ConvertToString(runAction->GetName());
+	  cv = runAction->GetName();
   }
   return cv;
 }
