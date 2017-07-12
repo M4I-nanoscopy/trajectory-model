@@ -175,7 +175,7 @@ H5File *RunAction::GetOutputFile() {
 
   if ( file == nullptr )   {
 
-	  file = new H5File(name, H5F_ACC_TRUNC);
+	  file = new H5File(name.c_str(), H5F_ACC_TRUNC);
 
   }
 
