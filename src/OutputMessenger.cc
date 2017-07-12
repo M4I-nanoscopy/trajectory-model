@@ -38,7 +38,7 @@ void OutputMessenger::SetNewValue(
 {
 	if( command==nameCmd )
 	{
-		if(newValues != NULL)
+		if(newValues.strip() != "")
 		{
 			runAction->SetName(newValues);
 		}

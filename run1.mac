@@ -13,5 +13,5 @@
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
-
+/run/output foo.h5
 /run/beamOn 100
