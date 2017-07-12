@@ -79,22 +79,21 @@ int main(int argc,char** argv)
   physicsList->RegisterPhysics(new G4StepLimiterPhysics());
   physicsList->SetVerboseLevel(0);
   runManager->SetUserInitialization(physicsList);
-  RunAction * runAct = new RunAction();
-  runManager->SetUserAction(runAct);
+
   // User action initialization
   runManager->SetUserInitialization(new ActionInitialization());
+  RunAction * runAct = new RunAction();
+  runManager->SetUserAction(runAct);
   OutputMessenger * mes = new OutputMessenger();
+
   // Initialize visualization
   //
-  G4VisManager* visManager = new G4VisExecutive;
-  // G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
-  // G4VisManager* visManager = new G4VisExecutive("Quiet");
+  G4VisManager* visManager = new G4VisExecutive("Quiet");
   visManager->Initialize();
 
   // Get the pointer to the User Interface manager
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
-  //mes->GetCurrentValue("/run/output ");
-    //runManager->Initialize();
+
   // Process macro or start UI session
   //
   if ( ! ui ) {

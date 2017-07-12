@@ -49,8 +49,6 @@ target_link_libraries(trajectory-model ${hdf5_libs} ${Geant4_LIBRARIES})
 # relies on these scripts being in the current working directory.
 #
 set(TRAJECTORY-MODEL_SCRIPTS
-  trajectory-model.in
-  trajectory-model.out
   init_vis.mac
   run1.mac
   run2.mac
