@@ -69,7 +69,7 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-  //this function is called at the begining of ecah event
+  //this function is called at the begining of each event
   //
 
   // In order to avoid dependence of PrimaryGeneratorAction
@@ -98,12 +98,14 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     G4Exception("B1PrimaryGeneratorAction::GeneratePrimaries()",
      "MyCode0002",JustWarning,msg);
   }
-
-  G4double x0 = 2.5 * 55 * um;
+    G4ThreeVector vect = fEnvelopeBox->GetPointOnSurface();
+    vect.setZ(-fEnvelopeBox->GetZHalfLength()-100);
+    fParticleGun->SetParticlePosition(vect);
+  /*G4double x0 = 2.5 * 55 * um;
   G4double y0 = 2.5 * 55 * um;
   G4double z0 = 10 * um;
 
-  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
+  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));*/
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }
