@@ -82,8 +82,8 @@ int main(int argc,char** argv)
 
   // User action initialization
   runManager->SetUserInitialization(new ActionInitialization());
-  RunAction * runAct = new RunAction();
-  runManager->SetUserAction(runAct);
+  /*RunAction * runAct = new RunAction();
+  runManager->SetUserAction(runAct);*/
   OutputMessenger * mes = new OutputMessenger();
 
   // Initialize visualization
