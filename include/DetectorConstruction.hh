@@ -33,6 +33,7 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+#include "DetectorMessenger.hh"
 
 class G4VPhysicalVolume;
 class G4LogicalVolume;
@@ -42,15 +43,19 @@ class G4LogicalVolume;
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-    DetectorConstruction();
+    DetectorConstruction(G4double XY, G4double Z);
     virtual ~DetectorConstruction();
 
     virtual G4VPhysicalVolume* Construct();
     
     G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
+    void SetZ(G4double d);
+    G4double GetZ();
 
   protected:
     G4LogicalVolume*  fScoringVolume;
+    G4double env_sizeXY;
+    G4double env_sizeZ;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

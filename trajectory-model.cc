@@ -30,20 +30,19 @@
 
 #include "DetectorConstruction.hh"
 #include "ActionInitialization.hh"
-
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
 #else
 #include "G4RunManager.hh"
 #endif
-#include "RunAction.hh"
 #include "OutputMessenger.hh"
 #include "G4UImanager.hh"
 #include "QGSP_BERT.hh"
 #include "G4StepLimiterPhysics.hh"
-
+#include "DetectorMessenger.hh"
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
+#include "G4SystemOfUnits.hh"
 
 #include "Randomize.hh"
 
@@ -72,7 +71,8 @@ int main(int argc,char** argv)
   // Set mandatory initialization classes
   //
   // Detector construction
-  runManager->SetUserInitialization(new DetectorConstruction());
+    DetectorConstruction* det = new DetectorConstruction(55*4*um,300*um);
+  runManager->SetUserInitialization(det);
 
   // Physics list
   G4VModularPhysicsList* physicsList = new QGSP_BERT;
@@ -84,8 +84,8 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(new ActionInitialization());
   /*RunAction * runAct = new RunAction();
   runManager->SetUserAction(runAct);*/
-  OutputMessenger * mes = new OutputMessenger();
-
+  OutputMessenger * outMes = new OutputMessenger();
+    DetectorMessenger * detMes = new DetectorMessenger(det);
   // Initialize visualization
   //
   G4VisManager* visManager = new G4VisExecutive("Quiet");
@@ -116,7 +116,8 @@ int main(int argc,char** argv)
 
   delete visManager;
   delete runManager;
-  delete mes;
+  delete outMes;
+    delete detMes;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="trajectory-model" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\Geant4-10.02\;CMake Files\..\Geant4-10.02\geant4-install\;CMake Files\..\Geant4-10.02\geant4-install\lib\;CMake Files\..\Geant4-10.02\geant4-install\lib\Geant4-10.2.3\;CMake Files\..\Geant4-10.02\geant4-install\lib\Geant4-10.2.3\Modules\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="install">
+         <Option working_dir="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 install" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="list_install_components">
+         <Option working_dir="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 list_install_components" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="edit_cache">
+         <Option working_dir="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="trajectory-model">
+         <Option output="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/trajectory-model" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DG4_STORE_TRAJECTORY" />
+            <Add option="-DG4VERBOSE" />
+            <Add option="-DG4UI_USE" />
+            <Add option="-DG4VIS_USE" />
+            <Add option="-DG4UI_USE_TCSH" />
+            <Add option="-DG4INTY_USE_QT" />
+            <Add option="-DG4UI_USE_QT" />
+            <Add option="-DG4VIS_USE_OPENGLQT" />
+            <Add option="-DG4INTY_USE_XT" />
+            <Add option="-DG4UI_USE_XM" />
+            <Add option="-DG4VIS_USE_OPENGLXM" />
+            <Add option="-DG4VIS_USE_OPENGLX" />
+            <Add option="-DG4VIS_USE_OPENGL" />
+            <Add directory="/home/lucas/Internship_1A/Geant4-10.02/geant4-install/include/Geant4" />
+            <Add directory="/home/lucas/Internship_1A/trajectory-model/include" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/5" />
+            <Add directory="/usr/include/c++/5/backward" />
+            <Add directory="/usr/include/hdf5/serial" />
+            <Add directory="/usr/include/qt4" />
+            <Add directory="/usr/include/qt4/QtCore" />
+            <Add directory="/usr/include/qt4/QtGui" />
+            <Add directory="/usr/include/qt4/QtOpenGL" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/5" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 trajectory-model" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="trajectory-model/fast">
+         <Option output="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/trajectory-model" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DG4_STORE_TRAJECTORY" />
+            <Add option="-DG4VERBOSE" />
+            <Add option="-DG4UI_USE" />
+            <Add option="-DG4VIS_USE" />
+            <Add option="-DG4UI_USE_TCSH" />
+            <Add option="-DG4INTY_USE_QT" />
+            <Add option="-DG4UI_USE_QT" />
+            <Add option="-DG4VIS_USE_OPENGLQT" />
+            <Add option="-DG4INTY_USE_XT" />
+            <Add option="-DG4UI_USE_XM" />
+            <Add option="-DG4VIS_USE_OPENGLXM" />
+            <Add option="-DG4VIS_USE_OPENGLX" />
+            <Add option="-DG4VIS_USE_OPENGL" />
+            <Add directory="/home/lucas/Internship_1A/Geant4-10.02/geant4-install/include/Geant4" />
+            <Add directory="/home/lucas/Internship_1A/trajectory-model/include" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/5" />
+            <Add directory="/usr/include/c++/5/backward" />
+            <Add directory="/usr/include/hdf5/serial" />
+            <Add directory="/usr/include/qt4" />
+            <Add directory="/usr/include/qt4/QtCore" />
+            <Add directory="/usr/include/qt4/QtGui" />
+            <Add directory="/usr/include/qt4/QtOpenGL" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/5" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 trajectory-model/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="TRAJECTORY-MODEL">
+         <Option working_dir="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 TRAJECTORY-MODEL" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="install/local">
+         <Option working_dir="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/local" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="install/strip">
+         <Option working_dir="/home/lucas/Internship_1A/trajectory-model/cmake-build-debug" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/strip" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/lucas/Internship_1A/trajectory-model/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/include/ActionInitialization.hh">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/include/DetectorConstruction.hh">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/include/DetectorMessenger.hh">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/include/EventAction.hh">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/include/OutputMessenger.hh">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/include/PrimaryGeneratorAction.hh">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/include/RunAction.hh">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/include/SteppingAction.hh">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/include/TrackingAction.hh">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/src/ActionInitialization.cc">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/src/DetectorConstruction.cc">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/src/DetectorMessenger.cc">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/src/EventAction.cc">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/src/OutputMessenger.cc">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/src/PrimaryGeneratorAction.cc">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/src/RunAction.cc">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/src/SteppingAction.cc">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/src/TrackingAction.cc">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/trajectory-model.cc">
+         <Option target="trajectory-model"/>
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/init_vis.mac">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/run1.mac">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/run2.mac">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/vis.mac">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/../Geant4-10.02/geant4-install/lib/Geant4-10.2.3/Geant4ConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\..\Geant4-10.02\geant4-install\lib\Geant4-10.2.3\" />
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/../Geant4-10.02/geant4-install/lib/Geant4-10.2.3/Geant4Config.cmake">
+          <Option virtualFolder="CMake Files\..\Geant4-10.02\geant4-install\lib\Geant4-10.2.3\" />
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/../Geant4-10.02/geant4-install/lib/Geant4-10.2.3/Geant4LibraryDepends.cmake">
+          <Option virtualFolder="CMake Files\..\Geant4-10.02\geant4-install\lib\Geant4-10.2.3\" />
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/../Geant4-10.02/geant4-install/lib/Geant4-10.2.3/Geant4LibraryDepends-release.cmake">
+          <Option virtualFolder="CMake Files\..\Geant4-10.02\geant4-install\lib\Geant4-10.2.3\" />
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/../Geant4-10.02/geant4-install/lib/Geant4-10.2.3/UseGeant4.cmake">
+          <Option virtualFolder="CMake Files\..\Geant4-10.02\geant4-install\lib\Geant4-10.2.3\" />
+      </Unit>
+      <Unit filename="/home/lucas/Internship_1A/trajectory-model/../Geant4-10.02/geant4-install/lib/Geant4-10.2.3/Modules/IntelCompileFeatures.cmake">
+          <Option virtualFolder="CMake Files\..\Geant4-10.02\geant4-install\lib\Geant4-10.2.3\Modules\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>

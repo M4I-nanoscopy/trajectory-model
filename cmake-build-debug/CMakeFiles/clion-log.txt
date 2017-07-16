@@ -1,0 +1,4 @@
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/lucas/Internship_1A/trajectory-model
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/lucas/Internship_1A/trajectory-model/cmake-build-debug

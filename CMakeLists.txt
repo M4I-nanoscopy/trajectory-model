@@ -40,7 +40,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(trajectory-model trajectory-model.cc ${sources} ${headers})
+add_executable(trajectory-model trajectory-model.cc ${sources} ${headers} include/DetectorMessenger.hh src/DetectorMessenger.cc)
 target_link_libraries(trajectory-model ${hdf5_libs} ${Geant4_LIBRARIES})
 
 #----------------------------------------------------------------------------

@@ -28,33 +28,34 @@
 /// \file DetectorConstruction.cc
 /// \brief Implementation of the DetectorConstruction class
 
+#include <G4SolidStore.hh>
+#include <G4UImanager.hh>
+#include <G4VisExecutive.hh>
 #include "DetectorConstruction.hh"
 
 #include "G4RunManager.hh"
 #include "G4NistManager.hh"
 #include "G4Box.hh"
-#include "G4Cons.hh"
-#include "G4Orb.hh"
-#include "G4Sphere.hh"
-#include "G4Trd.hh"
-#include "G4LogicalVolume.hh"
+
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
-#include "CLHEP/Units/PhysicalConstants.h"
+
 
 #include "G4UserLimits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-DetectorConstruction::DetectorConstruction()
+DetectorConstruction::DetectorConstruction(G4double XY, G4double Z)
 : G4VUserDetectorConstruction(),
-  fScoringVolume(0)
-{ }
+  fScoringVolume(0),
+  env_sizeXY(XY),
+  env_sizeZ(Z)
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::~DetectorConstruction()
-{ }
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -64,7 +65,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4NistManager* nist = G4NistManager::Instance();
 
   // Four by four pixels
-  G4double env_sizeXY = 55 * 4 * um, env_sizeZ = 300 * um;
+  //G4double env_sizeXY = 55 * 4 * um, env_sizeZ = 300 * um;
 
   // Option to switch on/off checking of volumes overlaps
   //
@@ -140,6 +141,38 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //always return the physical World
   //
   return physWorld;
+}
+
+void DetectorConstruction::SetZ(G4double d) {
+    /*DetectorConstruction* det = new DetectorConstruction();
+    det->SetZ(d);
+    this->fScoringVolume = det->fScoringVolume;*/
+    //G4SolidStore::GetInstance()->Clean();
+    /*G4LogicalVolume::GetInstance()->Clean();
+    G4VPhysicalVolume::GetInstance()->Clean();*/
+    //define new one
+    DetectorConstruction* newDet = new DetectorConstruction(55*4*um,d);
+    G4RunManager::GetRunManager()->SetUserInitialization(newDet);
+    G4RunManager::GetRunManager()->Initialize();
+    G4RunManager::GetRunManager()->ReinitializeGeometry(true);
+    //newDet->Construct();
+    /*G4String command = "/vis/scene/create ";
+    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+    UImanager->ApplyCommand(command);
+    G4String comm = "/vis/sceneHandler/attach scene-1 ";
+    UImanager->ApplyCommand(comm);*/
+    /*newDet->fScoringVolume->ClearDaughters();
+    newDet->fScoringVolume->AddDaughter(Construct());*/
+    /*G4VPhysicalVolume* vol = newDet->Construct();
+    G4RunManager::GetRunManager()->ReinitializeGeometry(true);
+    G4RunManager::GetRunManager()->ReOptimizeMotherOf(vol);
+    G4RunManager::GetRunManager()->ReOptimize(newDet->fScoringVolume);
+    G4RunManager::GetRunManager()->DefineWorldVolume(vol);*/
+    //G4RunManager::GetRunManager()->GeometryHasBeenModified();
+}
+
+G4double DetectorConstruction::GetZ() {
+    return env_sizeZ;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

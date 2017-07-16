@@ -48,13 +48,12 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
-
+    //fEnvelopeBox = new G4Box("Box",110*um,110*um,20*um);
   // Finally, the processes are added to the particles' process manager:
   G4ParticleDefinition* particle = G4Electron::Electron();
-
   // default particle kinematic
   fParticleGun->SetParticleDefinition(particle);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
   fParticleGun->SetParticleEnergy(200.*keV);
 }
 
@@ -76,8 +75,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   // on DetectorConstruction class we get Envelope volume
   // from G4LogicalVolumeStore.
 
-  G4double envSizeXY = 0;
-  G4double envSizeZ = 0;
+  //G4double envSizeXY = 0;
+  //G4double envSizeZ = 0;
 
   if (!fEnvelopeBox)
   {
@@ -87,8 +86,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   }
 
   if ( fEnvelopeBox ) {
-    envSizeXY = fEnvelopeBox->GetXHalfLength();
-    envSizeZ = fEnvelopeBox->GetZHalfLength();
+    //envSizeXY = fEnvelopeBox->GetXHalfLength();
+    //envSizeZ = fEnvelopeBox->GetZHalfLength();
+      /*fEnvelopeBox->SetXHalfLength(110*um);
+      fEnvelopeBox->SetYHalfLength(110*um);
+      fEnvelopeBox->SetZHalfLength(20*um);*/
   }
   else  {
     G4ExceptionDescription msg;
@@ -99,7 +101,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
      "MyCode0002",JustWarning,msg);
   }
     G4ThreeVector vect = fEnvelopeBox->GetPointOnSurface();
-    vect.setZ(-fEnvelopeBox->GetZHalfLength()-100);
+    vect.setZ(fEnvelopeBox->GetZHalfLength()+100);
     fParticleGun->SetParticlePosition(vect);
   /*G4double x0 = 2.5 * 55 * um;
   G4double y0 = 2.5 * 55 * um;

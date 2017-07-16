@@ -14,6 +14,7 @@
 /event/verbose 0
 /tracking/verbose 0
 # /gun/position -95 40 -500 um
-/run/output foo.hdf5
+/vis/height 50
+/run/output output.hdf5
 /run/beamOn 100
 
