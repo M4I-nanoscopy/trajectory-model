@@ -152,7 +152,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Set Shape1 as scoring volume
   //
   fScoringVolume = logicShape1;
-    //logicWorld->SetVisAttributes(G4VisAttributes::Invisible);
+    logicWorld->SetVisAttributes(G4VisAttributes::Invisible);
   //
   //always return the physical World
   //
