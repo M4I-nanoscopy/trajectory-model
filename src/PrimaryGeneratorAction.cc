@@ -28,6 +28,7 @@
 /// \file PrimaryGeneratorAction.cc
 /// \brief Implementation of the PrimaryGeneratorAction class
 
+#include <DetectorConstruction.hh>
 #include "PrimaryGeneratorAction.hh"
 
 #include "G4LogicalVolumeStore.hh"
@@ -77,13 +78,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
   //G4double envSizeXY = 0;
   //G4double envSizeZ = 0;
-
-  if (!fEnvelopeBox)
-  {
-    G4LogicalVolume* envLV
-      = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
-    if ( envLV ) fEnvelopeBox = dynamic_cast<G4Box*>(envLV->GetSolid());
-  }
+  G4LogicalVolume* envLV
+          = G4LogicalVolumeStore::GetInstance()->GetVolume("Shape1");
+  fEnvelopeBox = 0;
+  if ( envLV ) fEnvelopeBox = dynamic_cast<G4Box*>(envLV->GetSolid());
 
   if ( fEnvelopeBox ) {
     //envSizeXY = fEnvelopeBox->GetXHalfLength();
@@ -97,15 +95,23 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     msg << "Envelope volume of box shape not found.\n";
     msg << "Perhaps you have changed geometry.\n";
     msg << "The gun will be place at the center.";
-    G4Exception("B1PrimaryGeneratorAction::GeneratePrimaries()",
+    G4Exception("PrimaryGeneratorAction::GeneratePrimaries()",
      "MyCode0002",JustWarning,msg);
   }
     G4ThreeVector vect = fEnvelopeBox->GetPointOnSurface();
-    vect.setZ(fEnvelopeBox->GetZHalfLength()+100);
+    vect.set(0.9*vect.getX()+(fEnvelopeBox->GetXHalfLength()),
+             0.9*vect.getY()+(fEnvelopeBox->GetYHalfLength()),
+             fEnvelopeBox->GetZHalfLength()+700);
+    //vect.setZ(fEnvelopeBox->GetZHalfLength()+700);
     fParticleGun->SetParticlePosition(vect);
   /*G4double x0 = 2.5 * 55 * um;
   G4double y0 = 2.5 * 55 * um;
   G4double z0 = 10 * um;
+
+  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));*/
+  /*G4double x0 = 0;
+  G4double y0 = 0;
+  G4double z0 = 700 * um;
 
   fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));*/
 

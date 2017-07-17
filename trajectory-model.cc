@@ -85,7 +85,6 @@ int main(int argc,char** argv)
   /*RunAction * runAct = new RunAction();
   runManager->SetUserAction(runAct);*/
   OutputMessenger * outMes = new OutputMessenger();
-    DetectorMessenger * detMes = new DetectorMessenger(det);
   // Initialize visualization
   //
   G4VisManager* visManager = new G4VisExecutive("Quiet");
@@ -117,7 +116,6 @@ int main(int argc,char** argv)
   delete visManager;
   delete runManager;
   delete outMes;
-    delete detMes;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

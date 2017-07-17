@@ -14,10 +14,10 @@
 DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
 :detectorConstruction(det)
 {
-    dir = new G4UIdirectory("/vis/");
+    dir = new G4UIdirectory("/tpx/");
     dir->SetGuidance("Change the solid height.");
 
-    heightCmd = new G4UIcmdWithADouble("/vis/height",this);
+    heightCmd = new G4UIcmdWithADouble("/tpx/height",this);
     heightCmd->SetGuidance("Change the solid height.");
     heightCmd->SetGuidance(" (300um is default)");
     heightCmd->SetParameterName("height in um",true,true);

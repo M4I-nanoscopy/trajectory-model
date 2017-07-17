@@ -56,6 +56,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume*  fScoringVolume;
     G4double env_sizeXY;
     G4double env_sizeZ;
+    DetectorMessenger* mes;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
