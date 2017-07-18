@@ -34,6 +34,8 @@
 #include <G4GeometryManager.hh>
 #include <G4PhysicalVolumeStore.hh>
 #include <G4LogicalVolumeStore.hh>
+#include <G4UserRunAction.hh>
+#include <G4PVReplica.hh>
 #include "DetectorConstruction.hh"
 
 #include "G4RunManager.hh"
@@ -51,8 +53,11 @@
 DetectorConstruction::DetectorConstruction(G4double XY, G4double Z)
 : G4VUserDetectorConstruction(),
   fScoringVolume(0),
+  fPhysicalVolume(0),
+  logicWorld(0),
   env_sizeXY(XY),
-  env_sizeZ(Z)
+  env_sizeZ(Z),
+  material("G4_Si")
 {
     mes = new DetectorMessenger(this);
 }
@@ -62,6 +67,8 @@ DetectorConstruction::DetectorConstruction(G4double XY, G4double Z)
 DetectorConstruction::~DetectorConstruction()
 {
     delete mes;
+    delete fScoringVolume;
+    delete fPhysicalVolume;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -101,8 +108,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
             new G4Box("Volume",                       //its name
                       0.5*world_sizeXY, 0.5*world_sizeXY, 0.5*world_sizeZ);     //its size*/
 
-  G4LogicalVolume* logicWorld =
-    new G4LogicalVolume(solidWorld,          //its solid
+    logicWorld = new G4LogicalVolume(solidWorld,          //its solid
                         vacuum,           //its material
                         "World");            //its name
 
@@ -111,8 +117,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                 vacuum,           //its material
                                 "Volume");            //its name*/
 
-  G4VPhysicalVolume* physWorld =
-    new G4PVPlacement(0,                     //no rotation
+    fPhysicalVolume = new G4PVPlacement(0,                     //no rotation
                       G4ThreeVector(0,0,0),       //at (0,0,0)
                       logicWorld,            //its logical volume
                       "World",               //its name
@@ -124,7 +129,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   // Shape 1: the timepix detector
   //
-  G4Material* shape1_mat = nist->FindOrBuildMaterial("G4_Si");
+  G4Material* shape1_mat = nist->FindOrBuildMaterial(material);
   //G4ThreeVector pos1 = G4ThreeVector(0, 0, -10*um);
     G4ThreeVector pos1 = G4ThreeVector(0.5*env_sizeXY, 0.5*env_sizeXY, 0.5*env_sizeZ);
   // Box shape filling the envelope
@@ -156,44 +161,32 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   //always return the physical World
   //
-  return physWorld;
+  return fPhysicalVolume;
 }
 
 void DetectorConstruction::SetZ(G4double d) {
     env_sizeZ = d;
-    /*DetectorConstruction* det = new DetectorConstruction();
-    det->SetZ(d);
-    this->fScoringVolume = det->fScoringVolume;*/
-    //G4SolidStore::GetInstance()->Clean();
-    /*G4LogicalVolume::GetInstance()->Clean();
-    G4VPhysicalVolume::GetInstance()->Clean();*/
-    //define new one
-    /*DetectorConstruction* newDet = new DetectorConstruction(55*4*um,d);
-    G4RunManager::GetRunManager()->SetUserInitialization(newDet);*/
-    G4GeometryManager::GetInstance()->OpenGeometry();
-    G4PhysicalVolumeStore::GetInstance()->Clean();
-    G4LogicalVolumeStore::GetInstance()->Clean();
-    G4SolidStore::GetInstance()->Clean();
-    //G4RunManager::GetRunManager()->ReinitializeGeometry();
-    G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
-    //newDet->Construct();
-    /*G4String command = "/vis/scene/create ";
-    G4UImanager* UImanager = G4UImanager::GetUIpointer();
-    UImanager->ApplyCommand(command);
-    G4String comm = "/vis/sceneHandler/attach scene-1 ";
-    UImanager->ApplyCommand(comm);*/
-    /*newDet->fScoringVolume->ClearDaughters();
-    newDet->fScoringVolume->AddDaughter(Construct());*/
-    /*G4VPhysicalVolume* vol = newDet->Construct();
-    G4RunManager::GetRunManager()->RunTermination();
-    G4RunManager::GetRunManager()->ReOptimizeMotherOf(vol);
-    G4RunManager::GetRunManager()->ReOptimize(newDet->fScoringVolume);
-    G4RunManager::GetRunManager()->DefineWorldVolume(vol);*/
-    //G4RunManager::GetRunManager()->GeometryHasBeenModified();
+    RefreshVis();
 }
 
 G4double DetectorConstruction::GetZ() {
     return env_sizeZ;
 }
 
+void DetectorConstruction::RefreshVis() {
+    G4GeometryManager::GetInstance()->OpenGeometry(fPhysicalVolume);
+    G4PhysicalVolumeStore::GetInstance()->Clean();
+    G4LogicalVolumeStore::GetInstance()->Clean();
+    G4SolidStore::GetInstance()->Clean();
+    G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
+}
+
+void DetectorConstruction::SetMat(G4String mat) {
+    material = mat;
+    RefreshVis();
+}
+
+G4String DetectorConstruction::GetMat() {
+    return material;
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -83,11 +83,24 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
       ->GetVolume()->GetLogicalVolume();
       
   // check if we are in scoring volume
-  if (volume != fScoringVolume) return;
+  if (volume != fScoringVolume) { // the electron is out of the solid,
+                                  // whether before or after the hit
+    if (fEventAction->getHasAlreadyHit()) {
+      if (!fEventAction->getIsOut()) { // it goes out
+        fEventAction->setIsOut(true);
+      }
+    }
+    return;
+  }
+  else {
+    if (!fEventAction->getHasAlreadyHit()) { // it goes in
+      fEventAction->setHasAlreadyHit(true);
+    }
+  }
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
-  fEventAction->AddEdep(edepStep);  
+  fEventAction->AddEdep(edepStep);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

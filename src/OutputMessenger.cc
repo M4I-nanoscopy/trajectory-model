@@ -22,9 +22,7 @@ OutputMessenger::OutputMessenger()
 	nameCmd->SetGuidance(" (output.hdf5 is default)");
 	nameCmd->SetParameterName("fileName",true,true);
 	nameCmd->SetDefaultValue("output.hdf5");
-	 //fmat1Cmd->SetParameterName("wMaterial",false);
-	nameCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-	//nameCmd->
+	nameCmd->AvailableForStates(G4State_PreInit,G4State_Idle,G4State_Init);
 }
 
 OutputMessenger::~OutputMessenger()

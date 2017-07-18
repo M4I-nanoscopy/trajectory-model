@@ -9,6 +9,7 @@
 
 class G4UIcommand;
 class G4UIcmdWithADouble;
+class G4UIcmdWithAString;
 
 
 class DetectorConstruction;
@@ -29,6 +30,7 @@ private:
 private:
     G4UIdirectory * dir;
     G4UIcmdWithADouble * heightCmd;
+    G4UIcmdWithAString * matCmd;
 };
 
 #endif //TRAJECTORY_MODEL_DETECTORMESSENGER_HH

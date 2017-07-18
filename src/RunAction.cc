@@ -47,7 +47,8 @@ RunAction::RunAction()
 : G4UserRunAction(),
   fEdep("Edep", 0.),
   fEdep2("Edep2", 0.),
-  name("output.hdf5")
+  name("output.hdf5"),
+  KeptElectrons(0)
 {
   // add new units for dose
   //
@@ -148,6 +149,9 @@ void RunAction::EndOfRunAction(const G4Run* run)
      << " Cumulated dose per run, in scoring volume : "
      << G4BestUnit(dose,"Dose") << " rms = " << G4BestUnit(rmsDose,"Dose")
      << G4endl
+     << " Number of electrons which stay into the solid : "
+     << KeptElectrons << " out of " << nofEvents
+     << G4endl
      << "------------------------------------------------------------"
      << G4endl
      << G4endl;
@@ -180,6 +184,10 @@ H5File *RunAction::GetOutputFile() {
   }
 
   return file;
+}
+
+void RunAction::AddKeptElectron() {
+  KeptElectrons++;
 }
 
 

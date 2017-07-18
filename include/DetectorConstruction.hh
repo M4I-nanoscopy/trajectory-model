@@ -49,14 +49,22 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     virtual G4VPhysicalVolume* Construct();
     
     G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
+    G4VPhysicalVolume* GetPhysicalVolume() const { return fPhysicalVolume; }
     void SetZ(G4double d);
     G4double GetZ();
+    void RefreshVis();
+    void SetMat(G4String mat);
+    G4String GetMat();
+
 
   protected:
     G4LogicalVolume*  fScoringVolume;
+    G4VPhysicalVolume* fPhysicalVolume;
+    G4LogicalVolume* logicWorld;
     G4double env_sizeXY;
     G4double env_sizeZ;
     DetectorMessenger* mes;
+    G4String material;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

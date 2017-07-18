@@ -60,6 +60,10 @@ class EventAction : public G4UserEventAction
     void AddEdep(G4double edep) { fEdep += edep; }
 
     void AddTrackStep(int step, G4double x, G4double y, G4double z, G4double t, G4double energy, G4double velocity, G4double length);
+    void setIsOut(bool b);
+    void setHasAlreadyHit(bool c);
+    bool getHasAlreadyHit();
+    bool getIsOut();
 
   private:
     RunAction* fRunAction;
@@ -68,6 +72,8 @@ class EventAction : public G4UserEventAction
     DataSet* dataSet;
     double *trajectory;
     int maxStep;
+    bool isOut;
+    bool hasAlreadyHit;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

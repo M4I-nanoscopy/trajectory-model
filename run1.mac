@@ -13,8 +13,9 @@
 /run/verbose 0
 /event/verbose 0
 /tracking/verbose 0
-# /gun/position -95 40 -500 um
-/tpx/height 100
+
+# /tpx/height 100
+# /tpx/mat G4_GALLIUM_ARSENIDE
 /run/output output.hdf5
 /run/beamOn 100
 

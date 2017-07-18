@@ -98,12 +98,20 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     G4Exception("PrimaryGeneratorAction::GeneratePrimaries()",
      "MyCode0002",JustWarning,msg);
   }
-    G4ThreeVector vect = fEnvelopeBox->GetPointOnSurface();
-    vect.set(0.9*vect.getX()+(fEnvelopeBox->GetXHalfLength()),
-             0.9*vect.getY()+(fEnvelopeBox->GetYHalfLength()),
-             fEnvelopeBox->GetZHalfLength()+700);
-    //vect.setZ(fEnvelopeBox->GetZHalfLength()+700);
-    fParticleGun->SetParticlePosition(vect);
+  // let's choose some random points on the upper surface
+  G4float x = static_cast <G4float> (rand()) /
+          (static_cast <G4float> (RAND_MAX/(2*fEnvelopeBox->GetXHalfLength())));
+  G4float y = static_cast <G4float> (rand()) /
+          (static_cast <G4float> (RAND_MAX/(2*fEnvelopeBox->GetYHalfLength())));
+  G4ThreeVector * vect = new G4ThreeVector(x,
+                                           y,
+                                           fEnvelopeBox->GetZHalfLength()+700*um);
+  /*G4ThreeVector vect = fEnvelopeBox->GetPointOnSurface();
+  vect.set(0.9*vect.getX()+(fEnvelopeBox->GetXHalfLength()),
+           0.9*vect.getY()+(fEnvelopeBox->GetYHalfLength()),
+           fEnvelopeBox->GetZHalfLength()+700*um);*/
+  //vect.setZ(fEnvelopeBox->GetZHalfLength()+700);
+  fParticleGun->SetParticlePosition(*vect);
   /*G4double x0 = 2.5 * 55 * um;
   G4double y0 = 2.5 * 55 * um;
   G4double z0 = 10 * um;
