@@ -68,7 +68,8 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 void EventAction::EndOfEventAction(const G4Event* event)
 {
-  if (!isOut) { // if the electron track ends into the solid, we take this track into account
+  if (!isOut && hasAlreadyHit) {
+      // if the electron track ends into the solid, we take this track into account
     // accumulate statistics in run action
     fRunAction->AddKeptElectron();
     fRunAction->AddEdep(fEdep);

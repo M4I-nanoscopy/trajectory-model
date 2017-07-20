@@ -14,8 +14,8 @@
 /event/verbose 0
 /tracking/verbose 0
 
-# /tpx/height 100
-# /tpx/mat G4_GALLIUM_ARSENIDE
-/run/output output.hdf5
-/run/beamOn 100
+# /tpx/height 80
+/tpx/mat G4_GALLIUM_ARSENIDE
+/run/output 225_GaAs.hdf5
+/run/beamOn 225
 

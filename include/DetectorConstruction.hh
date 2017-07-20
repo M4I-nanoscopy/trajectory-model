@@ -43,7 +43,7 @@ class G4LogicalVolume;
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-    DetectorConstruction(G4double XY, G4double Z);
+    DetectorConstruction();
     virtual ~DetectorConstruction();
 
     virtual G4VPhysicalVolume* Construct();

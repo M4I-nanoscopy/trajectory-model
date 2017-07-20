@@ -51,7 +51,10 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   fParticleGun  = new G4ParticleGun(n_particle);
     //fEnvelopeBox = new G4Box("Box",110*um,110*um,20*um);
   // Finally, the processes are added to the particles' process manager:
-  G4ParticleDefinition* particle = G4Electron::Electron();
+  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+  G4String particleName;
+  G4ParticleDefinition* particle
+    = particleTable->FindParticle(particleName="e-");
   // default particle kinematic
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
@@ -76,19 +79,17 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   // on DetectorConstruction class we get Envelope volume
   // from G4LogicalVolumeStore.
 
-  //G4double envSizeXY = 0;
-  //G4double envSizeZ = 0;
-  G4LogicalVolume* envLV
-          = G4LogicalVolumeStore::GetInstance()->GetVolume("Shape1");
-  fEnvelopeBox = 0;
-  if ( envLV ) fEnvelopeBox = dynamic_cast<G4Box*>(envLV->GetSolid());
+  G4double envSizeXY = 0;
+  G4double envSizeZ = 0;
+  if (!fEnvelopeBox) {
+    G4LogicalVolume *envLV
+            = G4LogicalVolumeStore::GetInstance()->GetVolume("Shape1");
+    if ( envLV ) fEnvelopeBox = dynamic_cast<G4Box*>(envLV->GetSolid());
+  }
 
   if ( fEnvelopeBox ) {
-    //envSizeXY = fEnvelopeBox->GetXHalfLength();
-    //envSizeZ = fEnvelopeBox->GetZHalfLength();
-      /*fEnvelopeBox->SetXHalfLength(110*um);
-      fEnvelopeBox->SetYHalfLength(110*um);
-      fEnvelopeBox->SetZHalfLength(20*um);*/
+    envSizeXY = fEnvelopeBox->GetXHalfLength()*2.;
+    envSizeZ = fEnvelopeBox->GetZHalfLength()*2.;
   }
   else  {
     G4ExceptionDescription msg;
@@ -99,19 +100,20 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
      "MyCode0002",JustWarning,msg);
   }
   // let's choose some random points on the upper surface
-  G4float x = static_cast <G4float> (rand()) /
-          (static_cast <G4float> (RAND_MAX/(2*fEnvelopeBox->GetXHalfLength())));
+  /*G4float x = static_cast <G4float> (rand()) /
+          (static_cast <G4float> (RAND_MAX/envSizeXY));
   G4float y = static_cast <G4float> (rand()) /
-          (static_cast <G4float> (RAND_MAX/(2*fEnvelopeBox->GetYHalfLength())));
-  G4ThreeVector * vect = new G4ThreeVector(x,
-                                           y,
-                                           fEnvelopeBox->GetZHalfLength()+700*um);
-  /*G4ThreeVector vect = fEnvelopeBox->GetPointOnSurface();
-  vect.set(0.9*vect.getX()+(fEnvelopeBox->GetXHalfLength()),
-           0.9*vect.getY()+(fEnvelopeBox->GetYHalfLength()),
-           fEnvelopeBox->GetZHalfLength()+700*um);*/
-  //vect.setZ(fEnvelopeBox->GetZHalfLength()+700);
-  fParticleGun->SetParticlePosition(*vect);
+          (static_cast <G4float> (RAND_MAX/envSizeXY));
+  fParticleGun->SetParticlePosition(G4ThreeVector(x,
+                                                  y,
+                                                  envSizeZ+700*um));*/
+  //G4double x0 = envSizeXY * G4UniformRand();
+  //G4double y0 = envSizeXY * G4UniformRand();
+    G4double x0 = envSizeXY * G4UniformRand();
+    G4double y0 = envSizeXY * G4UniformRand();
+  G4double z0 = 2. * envSizeZ;
+
+  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
   /*G4double x0 = 2.5 * 55 * um;
   G4double y0 = 2.5 * 55 * um;
   G4double z0 = 10 * um;

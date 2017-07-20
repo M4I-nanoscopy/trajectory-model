@@ -36,6 +36,7 @@
 #include <G4LogicalVolumeStore.hh>
 #include <G4UserRunAction.hh>
 #include <G4PVReplica.hh>
+#include <QtGui/QWidgetSet>
 #include "DetectorConstruction.hh"
 
 #include "G4RunManager.hh"
@@ -50,13 +51,13 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-DetectorConstruction::DetectorConstruction(G4double XY, G4double Z)
+DetectorConstruction::DetectorConstruction()
 : G4VUserDetectorConstruction(),
   fScoringVolume(0),
   fPhysicalVolume(0),
   logicWorld(0),
-  env_sizeXY(XY),
-  env_sizeZ(Z),
+  env_sizeXY(55*4*um),
+  env_sizeZ(300*um),
   material("G4_Si")
 {
     mes = new DetectorMessenger(this);
