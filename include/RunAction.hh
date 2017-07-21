@@ -63,11 +63,14 @@ class RunAction : public G4UserRunAction
     void SetName(G4String st);
     G4String GetName();
     void AddKeptElectron();
+    G4int GetKeptElectrons();
 
   private:
     G4Parameter<G4double> fEdep;
     G4Parameter<G4double> fEdep2;
     H5File*file = nullptr;
+    Group* traj = nullptr;
+    Group* pix = nullptr;
     G4String name;
     G4int KeptElectrons;
 };

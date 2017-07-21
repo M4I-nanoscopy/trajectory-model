@@ -72,6 +72,8 @@ RunAction::RunAction()
 
 RunAction::~RunAction()
 {
+  delete traj;
+  delete pix;
   delete file;
 }
 
@@ -79,6 +81,9 @@ RunAction::~RunAction()
 
 void RunAction::BeginOfRunAction(const G4Run*)
 {
+    file = GetOutputFile();
+    traj = new Group( file->createGroup( "/trajectories" ));
+    //pix = new Group( file->createGroup( "/pixels" ));
   // inform the runManager to save random number seed
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
@@ -190,5 +195,8 @@ void RunAction::AddKeptElectron() {
   KeptElectrons++;
 }
 
+G4int RunAction::GetKeptElectrons() {
+  return KeptElectrons;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

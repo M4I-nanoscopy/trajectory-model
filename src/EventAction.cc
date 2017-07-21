@@ -29,6 +29,7 @@
 /// \brief Implementation of the EventAction class
 
 #include <G4SIunits.hh>
+#include <hdf5_hl.h>
 #include "EventAction.hh"
 #include "RunAction.hh"
 
@@ -68,20 +69,21 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 void EventAction::EndOfEventAction(const G4Event* event)
 {
-  if (!isOut && hasAlreadyHit) {
-      // if the electron track ends into the solid, we take this track into account
+  if (!isOut && hasAlreadyHit) {// if the electron track ends into the solid,
+                                // we take this track into account
+      const H5std_string DATASET_NAME_TRAJ(
+              "/trajectories/" + std::to_string(fRunAction->GetKeptElectrons()));
     // accumulate statistics in run action
     fRunAction->AddKeptElectron();
     fRunAction->AddEdep(fEdep);
     // Get output file
-    RunAction *runAction = (RunAction *) (G4RunManager::GetRunManager()->GetUserRunAction());
-    H5File * file = runAction->GetOutputFile();
-
+    H5File * file = fRunAction->GetOutputFile();
     // Setup and write hdf5 dataset, using the EventID as dataset name
     hsize_t fDim[] = {(hsize_t) maxStep, FSPACE_DIM2};
     DataSpace fSpace(FSPACE_RANK, fDim);
     dataSet = new DataSet(
-            file->createDataSet(std::to_string(event->GetEventID()).c_str(), PredType::NATIVE_DOUBLE, fSpace));
+            file->createDataSet(DATASET_NAME_TRAJ,
+                                PredType::NATIVE_DOUBLE, fSpace));
     dataSet->write(trajectory, PredType::NATIVE_DOUBLE, fSpace, fSpace);
   }
   delete trajectory;
@@ -90,7 +92,8 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void EventAction::AddTrackStep(int step, G4double x, G4double y, G4double z, G4double t, G4double energy, G4double velocity, G4double length)
+void EventAction::AddTrackStep(int step, G4double x, G4double y, G4double z,
+                               G4double t, G4double energy, G4double velocity, G4double length)
 {
   // TODO: need to handle this overflow better, not sure when it happens
   if ( step > FSPACE_DIM1 ) return;
