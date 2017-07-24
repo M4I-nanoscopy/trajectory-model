@@ -64,6 +64,9 @@ class RunAction : public G4UserRunAction
     G4String GetName();
     void AddKeptElectron();
     G4int GetKeptElectrons();
+    void setHeight(G4double h);
+    void setEnergy(G4double e);
+    void setMaterial(G4String m);
 
   private:
     G4Parameter<G4double> fEdep;
@@ -72,6 +75,9 @@ class RunAction : public G4UserRunAction
     Group* traj = nullptr;
     Group* pix = nullptr;
     G4String name;
+    G4double currentHeight;
+    G4double currentEnergy;
+    G4String currentMaterial;
     G4int KeptElectrons;
 };
 

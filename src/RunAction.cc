@@ -48,7 +48,10 @@ RunAction::RunAction()
   fEdep("Edep", 0.),
   fEdep2("Edep2", 0.),
   name("output.hdf5"),
-  KeptElectrons(0)
+  KeptElectrons(0),
+  currentMaterial("G4_Si"),
+  currentHeight(300*um),
+  currentEnergy(200)
 {
   // add new units for dose
   //
@@ -81,9 +84,20 @@ RunAction::~RunAction()
 
 void RunAction::BeginOfRunAction(const G4Run*)
 {
-    file = GetOutputFile();
-    traj = new Group( file->createGroup( "/trajectories" ));
-    //pix = new Group( file->createGroup( "/pixels" ));
+  file = GetOutputFile();
+  traj = new Group( file->createGroup( "/trajectories" ));
+  G4double energy = 200;
+  G4double height = currentHeight;
+  G4String mat = currentMaterial;
+  StrType str_type(PredType::C_S1, H5T_VARIABLE);
+  DataSpace dspace(H5S_SCALAR);
+  Attribute att_energy = traj->createAttribute("beam_energy",PredType::NATIVE_DOUBLE,dspace);
+  Attribute att_height = traj->createAttribute("sensor_height",PredType::NATIVE_DOUBLE,dspace);
+  Attribute att_mat = traj->createAttribute("sensor_material",str_type,dspace);
+  att_energy.write(PredType::NATIVE_DOUBLE,&energy);
+  att_height.write(PredType::NATIVE_DOUBLE,&height);
+  att_mat.write(str_type,&mat);
+
   // inform the runManager to save random number seed
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
@@ -197,6 +211,18 @@ void RunAction::AddKeptElectron() {
 
 G4int RunAction::GetKeptElectrons() {
   return KeptElectrons;
+}
+
+void RunAction::setHeight(G4double h) {
+  currentHeight = h;
+}
+
+void RunAction::setEnergy(G4double e) {
+  currentEnergy = e;
+}
+
+void RunAction::setMaterial(G4String m) {
+  currentMaterial = m;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

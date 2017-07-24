@@ -16,6 +16,6 @@
 
 # /tpx/height 80
 # /tpx/mat G4_GALLIUM_ARSENIDE
-/run/output 10000_Si.hdf5
-/run/beamOn 10000
+# /run/output 100000_Si.hdf5
+/run/beamOn 50
 

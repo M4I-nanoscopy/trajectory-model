@@ -2,6 +2,7 @@
 // Created by lucas on 14/07/17.
 //
 
+#include <RunAction.hh>
 #include "DetectorConstruction.hh"
 #include "G4UImessenger.hh"
 #include "G4UIcmdWithADouble.hh"
@@ -43,11 +44,13 @@ DetectorMessenger::~DetectorMessenger()
 void DetectorMessenger::SetNewValue(
         G4UIcommand * command,G4String newValues)
 {
+    RunAction * run = (RunAction *) G4RunManager::GetRunManager()->GetUserRunAction();
     if( command==heightCmd )
     {
         if(newValues.strip() != "")
         {
             detectorConstruction->SetZ((heightCmd->ConvertToDouble(newValues))*um);
+            run->setHeight((heightCmd->ConvertToDouble(newValues))*um);
         }
     }
     if( command==matCmd )
@@ -55,6 +58,7 @@ void DetectorMessenger::SetNewValue(
         if(newValues.strip() != "")
         {
             detectorConstruction->SetMat(newValues);
+            run->setMaterial(newValues);
         }
     }
 }
