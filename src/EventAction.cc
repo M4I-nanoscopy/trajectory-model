@@ -81,9 +81,9 @@ void EventAction::EndOfEventAction(const G4Event* event)
     // Setup and write hdf5 dataset, using the EventID as dataset name
     hsize_t fDim[] = {(hsize_t) maxStep, FSPACE_DIM2};
     DataSpace fSpace(FSPACE_RANK, fDim);
-    dataSet = new DataSet(
-            file->createDataSet(DATASET_NAME_TRAJ,
-                                PredType::NATIVE_DOUBLE, fSpace));
+
+    dataSet = new DataSet(file->createDataSet(DATASET_NAME_TRAJ.c_str(), PredType::NATIVE_DOUBLE, fSpace));
+
     dataSet->write(trajectory, PredType::NATIVE_DOUBLE, fSpace, fSpace);
   }
   delete trajectory;
