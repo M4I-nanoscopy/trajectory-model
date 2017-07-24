@@ -51,8 +51,7 @@ target_link_libraries(trajectory-model ${hdf5_libs} ${Geant4_LIBRARIES})
 set(TRAJECTORY-MODEL_SCRIPTS
   init_vis.mac
   run1.mac
-  run2.mac
-  vis.mac
+        vis.mac
   )
 
 foreach(_script ${TRAJECTORY-MODEL_SCRIPTS})
