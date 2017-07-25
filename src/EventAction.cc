@@ -56,7 +56,7 @@ EventAction::~EventAction()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void EventAction::BeginOfEventAction(const G4Event*)
-{    
+{
   fEdep = 0.;
   isOut = false;
   hasAlreadyHit = false;
@@ -69,6 +69,9 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 void EventAction::EndOfEventAction(const G4Event* event)
 {
+    if (event->GetEventID() < 1) {
+        fRunAction->InitFile(event->GetPrimaryVertex()->GetPrimary()->GetKineticEnergy());
+    }
   if (!isOut && hasAlreadyHit) {// if the electron track ends into the solid,
                                 // we take this track into account
       const H5std_string DATASET_NAME_TRAJ(

@@ -65,18 +65,16 @@ class RunAction : public G4UserRunAction
     void AddKeptElectron();
     G4int GetKeptElectrons();
     void setHeight(G4double h);
-    void setEnergy(G4double e);
     void setMaterial(G4String m);
+    void InitFile(G4double d);
 
   private:
     G4Parameter<G4double> fEdep;
     G4Parameter<G4double> fEdep2;
     H5File*file = nullptr;
     Group* traj = nullptr;
-    Group* pix = nullptr;
     G4String name;
     G4double currentHeight;
-    G4double currentEnergy;
     G4String currentMaterial;
     G4int KeptElectrons;
 };
