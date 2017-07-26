@@ -96,7 +96,7 @@ void RunAction::InitFile(G4double d) {
     file = GetOutputFile();
     traj = new Group( file->createGroup( "/trajectories" ));
     G4double energy = d*1000;
-    G4double height = currentHeight;
+    G4double height = currentHeight*1000000;
     G4String mat = currentMaterial;
     StrType str_type(PredType::C_S1, H5T_VARIABLE);
     DataSpace dspace(H5S_SCALAR);
