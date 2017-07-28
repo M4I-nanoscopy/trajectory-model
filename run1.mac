@@ -17,6 +17,6 @@
 # /tpx/height 80
 # /tpx/mat G4_GALLIUM_ARSENIDE
 # /run/output 100000_Si_v2.hdf5
-# /gun/energy 50 keV
-/run/beamOn 15
+/gun/energy 300 keV
+/run/beamOn 50
 
