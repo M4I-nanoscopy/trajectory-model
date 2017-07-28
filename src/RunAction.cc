@@ -100,9 +100,9 @@ void RunAction::InitFile(G4double d) {
     G4String mat = currentMaterial;
     StrType str_type(PredType::C_S1, H5T_VARIABLE);
     DataSpace dspace(H5S_SCALAR);
-    Attribute att_energy = traj->createAttribute("beam_energy",PredType::NATIVE_DOUBLE,dspace);
-    Attribute att_height = traj->createAttribute("sensor_height",PredType::NATIVE_DOUBLE,dspace);
-    Attribute att_mat = traj->createAttribute("sensor_material",str_type,dspace);
+    Attribute att_energy = file->createAttribute("beam_energy",PredType::NATIVE_DOUBLE,dspace);
+    Attribute att_height = file->createAttribute("sensor_height",PredType::NATIVE_DOUBLE,dspace);
+    Attribute att_mat = file->createAttribute("sensor_material",str_type,dspace);
     att_energy.write(PredType::NATIVE_DOUBLE,&energy);
     att_height.write(PredType::NATIVE_DOUBLE,&height);
     att_mat.write(str_type,&mat);
