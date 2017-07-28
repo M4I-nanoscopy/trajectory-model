@@ -40,7 +40,14 @@
 using namespace H5;
 #endif
 
+#include "G4UserRunAction.hh"
+#include "MpxDetector.hh"
+#include "globals.hh"
+
 class G4Run;
+class G4Timer;
+class HistoManager;
+class G4GenericMessenger;
 
 /// Run action class
 ///
@@ -53,7 +60,7 @@ class RunAction : public G4UserRunAction
   public:
     RunAction();
     virtual ~RunAction();
-
+    virtual G4Run *GenerateRun();
     // virtual G4Run* GenerateRun();
     virtual void BeginOfRunAction(const G4Run*);
     virtual void   EndOfRunAction(const G4Run*);
@@ -77,6 +84,10 @@ class RunAction : public G4UserRunAction
     G4double currentHeight;
     G4String currentMaterial;
     G4int KeptElectrons;
+    G4Timer *timer;
+    MpxDetector* detector;
+    HistoManager* histoManager;
+    G4GenericMessenger* fMessenger;
 };
 
 #endif

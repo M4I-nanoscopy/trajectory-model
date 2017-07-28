@@ -31,11 +31,12 @@
 #include "SteppingAction.hh"
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"
-
 #include "G4Step.hh"
 #include "G4Event.hh"
 #include "G4RunManager.hh"
-#include "G4LogicalVolume.hh"
+#include "RunAction.hh"
+#include "G4SteppingManager.hh"
+#include "HistoManager.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -43,7 +44,11 @@ SteppingAction::SteppingAction(EventAction* eventAction)
 : G4UserSteppingAction(),
   fEventAction(eventAction),
   fScoringVolume(0)
-{}
+{
+    G4RunManager *fRM = G4RunManager::GetRunManager();
+    myDet = (DetectorConstructionBase *)(fRM->GetUserDetectorConstruction());
+    thickness = myDet->GetSensorThickness();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -100,7 +105,30 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
+    if (edepStep <= 0.) return;
   fEventAction->AddEdep(edepStep);
+
+
+
+
+
+
+
+    //longitudinal profile of deposited energy
+    G4ThreeVector prePoint  = step->GetPreStepPoint()->GetPosition();
+    G4ThreeVector postPoint = step->GetPostStepPoint()->GetPosition();
+    G4ThreeVector point = prePoint + G4UniformRand() * (postPoint - prePoint);
+    G4double r = point.z() + 0.5 * thickness; //FIXME get detector thickness
+
+
+    // fill histograms
+    G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
+    if( step->GetTrack()->GetVolume()->GetName() == "pixel_cell"){
+        analysisManager->FillH1(1, r, edepStep);
+    }
+
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

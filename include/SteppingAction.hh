@@ -33,9 +33,9 @@
 
 #include "G4UserSteppingAction.hh"
 #include "globals.hh"
+#include "DetectorConstructionBase.hh"
 
-
-
+class RunAction;
 class EventAction;
 
 class G4LogicalVolume;
@@ -56,6 +56,8 @@ class SteppingAction : public G4UserSteppingAction
 
     EventAction*  fEventAction;
     G4LogicalVolume* fScoringVolume;
+    DetectorConstructionBase* myDet;
+    G4double thickness;
 
 };
 

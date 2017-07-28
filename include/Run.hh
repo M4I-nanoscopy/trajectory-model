@@ -23,83 +23,43 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1EventAction.hh 93886 2015-11-03 08:28:26Z gcosmo $
 //
-/// \file EventAction.hh
-/// \brief Definition of the EventAction class
+//
+/// \file include/Run.hh
+/// \brief Definition of the Run class
 
-#ifndef EventAction_h
-#define EventAction_h 1
+#ifndef Run_h
+#define Run_h 1
 
-#include "G4UserEventAction.hh"
+#include "G4Run.hh"
 #include "globals.hh"
+#include "ExportMgr.hh"
 
-#include "H5Cpp.h"
-#include "G4UserEventAction.hh"
+class G4Event;
 
-#include "DetectorHit.hh"
-#include "globals.hh"
-
-class G4GenericMessenger;
-
-
-class G4Track;
-#ifndef H5_NO_NAMESPACE
-  using namespace H5;
-#endif
-
-const int   FSPACE_RANK = 2;    // Dataset rank as it is stored in the file
-const int   FSPACE_DIM1 = 4096;    // Dimension sizes of the dataset as it is
-const int   FSPACE_DIM2 = 7;
-
-class RunAction;
-
-/// Event action class
+/// Run class
 ///
 
-class EventAction : public G4UserEventAction
+class Run : public G4Run
 {
-  public:
-    EventAction(RunAction* runAction);
-    virtual ~EventAction();
+public:
+  Run();
+  virtual ~Run();
 
-    virtual void BeginOfEventAction(const G4Event* event);
-    virtual void EndOfEventAction(const G4Event* event);
+public:
+  virtual void RecordEvent(const G4Event *);
+  virtual void Merge(const G4Run *);
 
-    inline void     AddEdep(G4double edep) {
-      fEdep += edep;
-    }
-    /**
-     * Get energy of the current event
-     */
-    inline G4double GetEdep() const {
-      return fEdep;
-    }
+  void AddEdep(G4double e) {fEdeposit +=e; fEdeposit2 +=e*e;}
 
-    void AddTrackStep(int step, G4double x, G4double y, G4double z, G4double t, G4double energy, G4double velocity, G4double length);
-    void setIsOut(bool b);
-    void setHasAlreadyHit(bool c);
-    bool getHasAlreadyHit();
-    bool getIsOut();
 
-  private:
-    RunAction* fRunAction;
-    G4double     fEdep;
+private:
+  G4int lastEvent;
+  ExportMgr* mgr;
+  G4double fEdeposit, fEdeposit2;
 
-    DataSet* dataSet;
-    double *trajectory;
-    int maxStep;
-    bool isOut;
-    bool hasAlreadyHit;
-
-    G4int  fSensorHCID; //FIXME can be removed !?
-    G4int  fPrintModulo;
-    // the name of the digitizer
-    G4String digitizerName;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-    

@@ -23,83 +23,59 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1EventAction.hh 93886 2015-11-03 08:28:26Z gcosmo $
 //
-/// \file EventAction.hh
-/// \brief Definition of the EventAction class
+/// \file DetectorSD.hh
+/// \brief Definition of the DetectorSD class
 
-#ifndef EventAction_h
-#define EventAction_h 1
+#ifndef DetectorSD_h
+#define DetectorSD_h 1
 
-#include "G4UserEventAction.hh"
-#include "globals.hh"
+#include "G4VSensitiveDetector.hh"
 
-#include "H5Cpp.h"
-#include "G4UserEventAction.hh"
+
 
 #include "DetectorHit.hh"
-#include "globals.hh"
 
-class G4GenericMessenger;
+#include <vector>
 
+class G4Step;
+class G4HCofThisEvent;
 
-class G4Track;
-#ifndef H5_NO_NAMESPACE
-  using namespace H5;
-#endif
-
-const int   FSPACE_RANK = 2;    // Dataset rank as it is stored in the file
-const int   FSPACE_DIM1 = 4096;    // Dimension sizes of the dataset as it is
-const int   FSPACE_DIM2 = 7;
-
-class RunAction;
-
-/// Event action class
+/// Detector sensitive detector class
 ///
+/// In Initialize(), it creates one hit for each Detector layer and one more
+/// hit for accounting the total quantities in all layers.
+///
+/// The values are accounted in hits in ProcessHits() function which is called
+/// by Geant4 kernel at each step.
 
-class EventAction : public G4UserEventAction
+class DetectorSD : public G4VSensitiveDetector
 {
-  public:
-    EventAction(RunAction* runAction);
-    virtual ~EventAction();
-
-    virtual void BeginOfEventAction(const G4Event* event);
-    virtual void EndOfEventAction(const G4Event* event);
-
-    inline void     AddEdep(G4double edep) {
-      fEdep += edep;
-    }
+public:
     /**
-     * Get energy of the current event
-     */
-    inline G4double GetEdep() const {
-      return fEdep;
-    }
+     * DetectorSD constructor
+     * \param &name of the sensitive detector
+     * \param &hitsCollectionName of the hits collection
+     * \param nofCells nober of cells
+    */
+    DetectorSD(const G4String &name,
+               const G4String &hitsCollectionName,
+               G4int nofCells);
+    virtual ~DetectorSD();
 
-    void AddTrackStep(int step, G4double x, G4double y, G4double z, G4double t, G4double energy, G4double velocity, G4double length);
-    void setIsOut(bool b);
-    void setHasAlreadyHit(bool c);
-    bool getHasAlreadyHit();
-    bool getIsOut();
+    // methods from base class
+    virtual void   Initialize(G4HCofThisEvent *hitCollection);
+    virtual G4bool ProcessHits(G4Step *step, G4TouchableHistory *history);
+    virtual void   EndOfEvent(G4HCofThisEvent *hitCollection);
 
-  private:
-    RunAction* fRunAction;
-    G4double     fEdep;
-
-    DataSet* dataSet;
-    double *trajectory;
-    int maxStep;
-    bool isOut;
-    bool hasAlreadyHit;
-
-    G4int  fSensorHCID; //FIXME can be removed !?
-    G4int  fPrintModulo;
-    // the name of the digitizer
-    G4String digitizerName;
+private:
+    DetectorHitsCollection *fHitsCollection;
+    G4int     fNofCells;
+    G4int     nPixels;
+    G4int     eventNb;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
 
-    

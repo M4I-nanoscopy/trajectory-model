@@ -23,83 +23,60 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1EventAction.hh 93886 2015-11-03 08:28:26Z gcosmo $
 //
-/// \file EventAction.hh
-/// \brief Definition of the EventAction class
+//
+/// \file src/Run.cc
+/// \brief Implementation of the Run class
 
-#ifndef EventAction_h
-#define EventAction_h 1
-
-#include "G4UserEventAction.hh"
-#include "globals.hh"
-
-#include "H5Cpp.h"
-#include "G4UserEventAction.hh"
+#include "Run.hh"
 
 #include "DetectorHit.hh"
-#include "globals.hh"
+#include "G4SDManager.hh"
 
-class G4GenericMessenger;
+#include "G4Event.hh"
+#include "G4SystemOfUnits.hh"
 
-
-class G4Track;
-#ifndef H5_NO_NAMESPACE
-  using namespace H5;
-#endif
-
-const int   FSPACE_RANK = 2;    // Dataset rank as it is stored in the file
-const int   FSPACE_DIM1 = 4096;    // Dimension sizes of the dataset as it is
-const int   FSPACE_DIM2 = 7;
-
-class RunAction;
-
-/// Event action class
-///
-
-class EventAction : public G4UserEventAction
-{
-  public:
-    EventAction(RunAction* runAction);
-    virtual ~EventAction();
-
-    virtual void BeginOfEventAction(const G4Event* event);
-    virtual void EndOfEventAction(const G4Event* event);
-
-    inline void     AddEdep(G4double edep) {
-      fEdep += edep;
-    }
-    /**
-     * Get energy of the current event
-     */
-    inline G4double GetEdep() const {
-      return fEdep;
-    }
-
-    void AddTrackStep(int step, G4double x, G4double y, G4double z, G4double t, G4double energy, G4double velocity, G4double length);
-    void setIsOut(bool b);
-    void setHasAlreadyHit(bool c);
-    bool getHasAlreadyHit();
-    bool getIsOut();
-
-  private:
-    RunAction* fRunAction;
-    G4double     fEdep;
-
-    DataSet* dataSet;
-    double *trajectory;
-    int maxStep;
-    bool isOut;
-    bool hasAlreadyHit;
-
-    G4int  fSensorHCID; //FIXME can be removed !?
-    G4int  fPrintModulo;
-    // the name of the digitizer
-    G4String digitizerName;
-};
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+Run::Run() : G4Run(),
+fEdeposit(0.),
+fEdeposit2(0.)
+{
+#ifdef WITH_HDF5
+    mgr = ExportMgr::GetInstance();
 #endif
+}
 
-    
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+Run::~Run() {}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void Run::RecordEvent(const G4Event *event)
+{
+#ifdef WITH_HDF5
+    DetectorHitsCollection *HitsCollection = new DetectorHitsCollection;
+    HitsCollection = static_cast<DetectorHitsCollection *>(event->GetHCofThisEvent()->GetHC(0));
+
+    lastEvent = event->GetEventID();
+
+    if (HitsCollection->GetSize() != 0) {
+        mgr->AddData(HitsCollection, lastEvent);
+    }
+#endif
+}
+
+void Run::Merge(const G4Run* run)
+{
+  const Run* localRun =  static_cast<const Run*>(run);
+//   fEdeposit  += localRun->fEdeposit;
+//   fEdeposit2 += localRun->fEdeposit2;
+  
+  G4Run::Merge(run);
+}
+
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+

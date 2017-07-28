@@ -23,83 +23,45 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1EventAction.hh 93886 2015-11-03 08:28:26Z gcosmo $
+/// \file include/HistoManager.hh
+/// \brief Definition of the HistoManager class
 //
-/// \file EventAction.hh
-/// \brief Definition of the EventAction class
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef EventAction_h
-#define EventAction_h 1
+#ifndef HistoManager_h
+#define HistoManager_h 1
 
-#include "G4UserEventAction.hh"
 #include "globals.hh"
+// choose one of the three output file formats
+#include "g4root.hh"
+//#include "g4xml.hh"
+//#include "g4hbook.hh"
 
-#include "H5Cpp.h"
-#include "G4UserEventAction.hh"
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "DetectorHit.hh"
-#include "globals.hh"
-
-class G4GenericMessenger;
-
-
-class G4Track;
-#ifndef H5_NO_NAMESPACE
-  using namespace H5;
-#endif
-
-const int   FSPACE_RANK = 2;    // Dataset rank as it is stored in the file
-const int   FSPACE_DIM1 = 4096;    // Dimension sizes of the dataset as it is
-const int   FSPACE_DIM2 = 7;
-
-class RunAction;
-
-/// Event action class
-///
-
-class EventAction : public G4UserEventAction
+class HistoManager
 {
-  public:
-    EventAction(RunAction* runAction);
-    virtual ~EventAction();
-
-    virtual void BeginOfEventAction(const G4Event* event);
-    virtual void EndOfEventAction(const G4Event* event);
-
-    inline void     AddEdep(G4double edep) {
-      fEdep += edep;
-    }
+public:
     /**
-     * Get energy of the current event
+     * Constructor of the histogram manager
      */
-    inline G4double GetEdep() const {
-      return fEdep;
-    }
+    HistoManager();
+    /**
+     * Destructor of the histogram manager
+     */
+    ~HistoManager();
+    /**
+     * \param G4String name of the output file
+     */
+    void SetFilename(G4String);
+private:
+    void Book();
+    G4String fFileName;
 
-    void AddTrackStep(int step, G4double x, G4double y, G4double z, G4double t, G4double energy, G4double velocity, G4double length);
-    void setIsOut(bool b);
-    void setHasAlreadyHit(bool c);
-    bool getHasAlreadyHit();
-    bool getIsOut();
-
-  private:
-    RunAction* fRunAction;
-    G4double     fEdep;
-
-    DataSet* dataSet;
-    double *trajectory;
-    int maxStep;
-    bool isOut;
-    bool hasAlreadyHit;
-
-    G4int  fSensorHCID; //FIXME can be removed !?
-    G4int  fPrintModulo;
-    // the name of the digitizer
-    G4String digitizerName;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-    

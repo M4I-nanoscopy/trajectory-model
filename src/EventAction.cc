@@ -30,11 +30,19 @@
 
 #include <G4SIunits.hh>
 #include <hdf5_hl.h>
+#include <G4DigiManager.hh>
 #include "EventAction.hh"
 #include "RunAction.hh"
-
 #include "G4Event.hh"
 #include "G4RunManager.hh"
+#include "DetectorConstructionBase.hh"
+#include "Run.hh"
+#include "DetectorSD.hh"
+#include "HistoManager.hh"
+
+#include "DigitizerWeightField.hh"
+#include "G4GenericMessenger.hh"
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -43,9 +51,23 @@ EventAction::EventAction(RunAction* runAction)
   fRunAction(runAction),
   fEdep(0.),
   isOut(false),
-  hasAlreadyHit(false)
+  hasAlreadyHit(false),
+  fSensorHCID(-1),
+  fPrintModulo(10000),
+  digitizerName("")
 {
+  G4RunManager *fRM = G4RunManager::GetRunManager();
+  DetectorConstructionBase *myDet = (DetectorConstructionBase *)(fRM->GetUserDetectorConstruction());
 
+  digitizerName = myDet->GetDigitizerName();
+
+  G4DigiManager *digiManager = G4DigiManager::GetDMpointer();
+
+  //build the digitizer
+  if (digitizerName == "WFDigitizer") {
+    DigitizerWeightField *wfDigitizer = new DigitizerWeightField("WFDigitizer");
+    digiManager->AddNewModule(wfDigitizer);
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -55,42 +77,65 @@ EventAction::~EventAction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void EventAction::BeginOfEventAction(const G4Event*)
+void EventAction::BeginOfEventAction(const G4Event* event)
 {
-  fEdep = 0.;
-  isOut = false;
-  hasAlreadyHit = false;
-  // Initialize trajectory storage
-  trajectory = new double[FSPACE_DIM1 * FSPACE_DIM2];
-  std::fill_n(trajectory, FSPACE_DIM1 * FSPACE_DIM2, 0);
+    G4int eventID = event->GetEventID();
+    if (eventID % fPrintModulo == 0 && eventID != 0) {
+        G4cout << "\n---> Begin of event: " << eventID << G4endl;
+    }
+    fEdep = 0.;
+    isOut = false;
+    hasAlreadyHit = false;
+    // Initialize trajectory storage
+    trajectory = new double[FSPACE_DIM1 * FSPACE_DIM2];
+    std::fill_n(trajectory, FSPACE_DIM1 * FSPACE_DIM2, 0);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void EventAction::EndOfEventAction(const G4Event* event)
 {
-    if (event->GetEventID() < 1) {
+    // Print per event (modulo n)
+    G4int eventID = event->GetEventID();
+    if (eventID % fPrintModulo == 0 && eventID != 0) {
+        G4cout << "---> End of event: " << eventID << G4endl;
+    }
+
+    if (eventID < 1) {
         fRunAction->InitFile(event->GetPrimaryVertex()->GetPrimary()->GetKineticEnergy());
     }
-  if (!isOut && hasAlreadyHit) {// if the electron track ends into the solid,
+
+    // call digitizer after every event
+    G4DigiManager *digiManager = G4DigiManager::GetDMpointer();
+    DigitizerWeightField *digiModule = static_cast<DigitizerWeightField *>(digiManager->FindDigitizerModule(digitizerName));
+    if (digiModule) {
+        digiModule->Digitize();
+    }
+
+    if (!isOut && hasAlreadyHit) {// if the electron track ends into the solid,
                                 // we take this track into account
-      const H5std_string DATASET_NAME_TRAJ(
+        const H5std_string DATASET_NAME_TRAJ(
               "/trajectories/" + std::to_string(fRunAction->GetKeptElectrons()));
-    // accumulate statistics in run action
-    fRunAction->AddKeptElectron();
-    fRunAction->AddEdep(fEdep);
-    // Get output file
-    H5File * file = fRunAction->GetOutputFile();
-    // Setup and write hdf5 dataset, using the EventID as dataset name
-    hsize_t fDim[] = {(hsize_t) maxStep, FSPACE_DIM2};
-    DataSpace fSpace(FSPACE_RANK, fDim);
+        // accumulate statistics in run action
+        fRunAction->AddKeptElectron();
+        fRunAction->AddEdep(fEdep);
+        // Get output file
+        H5File * file = fRunAction->GetOutputFile();
+        // Setup and write hdf5 dataset, using the EventID as dataset name
+        hsize_t fDim[] = {(hsize_t) maxStep, FSPACE_DIM2};
+        DataSpace fSpace(FSPACE_RANK, fDim);
 
-    dataSet = new DataSet(file->createDataSet(DATASET_NAME_TRAJ.c_str(), PredType::NATIVE_DOUBLE, fSpace));
+        dataSet = new DataSet(file->createDataSet(DATASET_NAME_TRAJ.c_str(), PredType::NATIVE_DOUBLE, fSpace));
 
-    dataSet->write(trajectory, PredType::NATIVE_DOUBLE, fSpace, fSpace);
-  }
-  delete trajectory;
-  //delete dataSet;
+        dataSet->write(trajectory, PredType::NATIVE_DOUBLE, fSpace, fSpace);
+    }
+    delete trajectory;
+    //delete dataSet;
+
+    if (fEdep > 0.) {
+        //fill histogram with total energy per event
+        G4AnalysisManager::Instance()->FillH1(2, fEdep);
+    }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
