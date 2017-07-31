@@ -23,42 +23,34 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1SteppingAction.hh 74483 2013-10-09 13:37:06Z gcosmo $
-//
-/// \file SteppingAction.hh
+/// \file include/SteppingAction.hh
 /// \brief Definition of the SteppingAction class
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #ifndef SteppingAction_h
 #define SteppingAction_h 1
 
 #include "G4UserSteppingAction.hh"
-#include "globals.hh"
 #include "DetectorConstructionBase.hh"
 
 class RunAction;
 class EventAction;
 
-class G4LogicalVolume;
-
-/// Stepping action class
-/// 
-
 class SteppingAction : public G4UserSteppingAction
 {
-  public:
-    SteppingAction(EventAction* eventAction);
+public:
+    SteppingAction(RunAction*, EventAction*);
     virtual ~SteppingAction();
 
-    // method from the base class
     virtual void UserSteppingAction(const G4Step*);
 
-  private:
-
-    EventAction*  fEventAction;
-    G4LogicalVolume* fScoringVolume;
+private:
+    RunAction* fRunAction;
+    EventAction* fEventAction;
     DetectorConstructionBase* myDet;
     G4double thickness;
-
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

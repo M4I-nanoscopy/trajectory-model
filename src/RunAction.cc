@@ -23,66 +23,55 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1RunAction.cc 93886 2015-11-03 08:28:26Z gcosmo $
 //
-/// \file RunAction.cc
+/// \file src/RunAction.cc
 /// \brief Implementation of the RunAction class
 
-#include <G4GeneralParticleSourceData.hh>
-#include <Run.hh>
 #include "RunAction.hh"
-#include "PrimaryGeneratorAction.hh"
-#include "DetectorConstruction.hh"
-#include "G4RunManager.hh"
-#include "G4Run.hh"
-#include "G4ParameterManager.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4LogicalVolume.hh"
-#include "G4UnitsTable.hh"
-#include "G4Timer.hh"
+#include "DetectorHit.hh"
 #include "DetectorSD.hh"
 #include "HistoManager.hh"
+#include "Run.hh"
+
+#ifdef WITH_HDF5
+#include "ExportMgr.hh"
+#endif
+#include "G4Timer.hh"
+
+
+#include "G4RunManager.hh"
+#include "G4UnitsTable.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4GenericMessenger.hh"
+
+//static G4ThreadLocal Messenger *fmessenger;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 RunAction::RunAction()
-: G4UserRunAction(),
-  fEdep("Edep", 0.),
-  fEdep2("Edep2", 0.),
-  name("output.hdf5"),
-  KeptElectrons(0),
-  currentMaterial("G4_Si"),
-  currentHeight(300*um),
-  histoManager(0)
+    : G4UserRunAction(),
+      histoManager(0)
 {
-    // add new units for dose
-    //
-    const G4double milligray = 1.e-3*gray;
-    const G4double microgray = 1.e-6*gray;
-    const G4double nanogray  = 1.e-9*gray;
-    const G4double picogray  = 1.e-12*gray;
-
-    new G4UnitDefinition("milligray", "milliGy" , "Dose", milligray);
-    new G4UnitDefinition("microgray", "microGy" , "Dose", microgray);
-    new G4UnitDefinition("nanogray" , "nanoGy"  , "Dose", nanogray);
-    new G4UnitDefinition("picogray" , "picoGy"  , "Dose", picogray);
-
-    // Register parameter to the parameter manager
-    G4ParameterManager* parameterManager = G4ParameterManager::Instance();
-    parameterManager->RegisterParameter(fEdep);
-    parameterManager->RegisterParameter(fEdep2);
-
+#ifdef WITH_HDF5
+    G4String name;
+    fMessenger = new G4GenericMessenger(this, "/Output/", "Define all file names here");
+    fMessenger->DeclareMethod("edep", &ExportMgr::SetHDFFilename, "The filename for the HDF5 export.").SetParameterName(name, true).SetStates(G4State_Idle, G4State_PreInit);
+#endif
     histoManager = new HistoManager();
     timer = new G4Timer();
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 RunAction::~RunAction()
 {
-    delete traj;
-    delete file;
+#ifdef WITH_HDF5
+    delete fMessenger; // TODO check if ok to kill here
+#endif
     delete histoManager;
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -92,7 +81,9 @@ G4Run *RunAction::GenerateRun()
     return new Run();
 }
 
-void RunAction::BeginOfRunAction(const G4Run*)
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void RunAction::BeginOfRunAction(const G4Run *)
 {
     if (isMaster)
         timer->Start();
@@ -102,47 +93,30 @@ void RunAction::BeginOfRunAction(const G4Run*)
     if (analysisManager->IsActive()) {
         analysisManager->OpenFile();
     }
-
-    // inform the runManager to save random number seed
-    G4RunManager::GetRunManager()->SetRandomNumberStore(false);
-
-    // reset parameters to their initial values
-    G4ParameterManager* parameterManager = G4ParameterManager::Instance();
-    parameterManager->Reset();
-}
-
-void RunAction::InitFile(G4double d) {
-    file = GetOutputFile();
-    traj = new Group( file->createGroup( "/trajectories" ));
-    G4double energy = d*1000;
-    G4double height = currentHeight*1000000;
-    G4String mat = currentMaterial;
-    StrType str_type(PredType::C_S1, H5T_VARIABLE);
-    DataSpace dspace(H5S_SCALAR);
-    Attribute att_energy = file->createAttribute("beam_energy",PredType::NATIVE_DOUBLE,dspace);
-    Attribute att_height = file->createAttribute("sensor_height",PredType::NATIVE_DOUBLE,dspace);
-    Attribute att_mat = file->createAttribute("sensor_material",str_type,dspace);
-    att_energy.write(PredType::NATIVE_DOUBLE,&energy);
-    att_height.write(PredType::NATIVE_DOUBLE,&height);
-    att_mat.write(str_type,&mat);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void RunAction::EndOfRunAction(const G4Run* run)
+void RunAction::EndOfRunAction(const G4Run *aRun)
 {
-    if (isMaster) {
-        timer->Stop();
+  if (isMaster) {
+      timer->Stop();
 
-        G4cout << "Run " << run->GetRunID() << " with "
-               << run->GetNumberOfEventToBeProcessed()
-               << " particles processed in " << timer->GetRealElapsed()
-               << "s" << G4endl << G4endl;
+      G4cout << "Run " << aRun->GetRunID() << " with "
+              << aRun->GetNumberOfEventToBeProcessed()
+              << " particles processed in " << timer->GetRealElapsed()
+              << "s" << G4endl << G4endl;
 
-        detector = MpxDetector::GetInstance();
-        detector->WriteSparse();
-        detector->WriteFrame();
-        detector->WriteSimulationSettings();
+      detector = MpxDetector::GetInstance();
+      detector->WriteSparse();
+      detector->WriteFrame();
+      detector->WriteSimulationSettings();
+
+#ifdef WITH_HDF5
+        //write Data to HDF5 file and delet Export Manager
+        ExportMgr *mgr = ExportMgr::GetInstance();
+        mgr->WriteData();
+#endif
     }
     // write histogram files
     // Analysis manager takes care of threads and joins files!
@@ -151,122 +125,4 @@ void RunAction::EndOfRunAction(const G4Run* run)
         analysisManager->Write();
         analysisManager->CloseFile();
     }
-
-
-
-
-
-
-
-    G4int nofEvents = run->GetNumberOfEvent();
-    if (nofEvents == 0) return;
-
-    // Merge parameters
-    G4ParameterManager* parameterManager = G4ParameterManager::Instance();
-    parameterManager->Merge();
-
-    // Compute dose = total energy deposit in a run and its variance
-    //
-    G4double edep  = fEdep.GetValue();
-    G4double edep2 = fEdep2.GetValue();
-
-    G4double rms = edep2 - edep*edep/nofEvents;
-    if (rms > 0.) rms = std::sqrt(rms); else rms = 0.;
-
-    const DetectorConstruction* detectorConstruction
-    = static_cast<const DetectorConstruction*>
-            (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-    G4double mass = detectorConstruction->GetScoringVolume()->GetMass();
-    G4double dose = edep/mass;
-    G4double rmsDose = rms/mass;
-
-    // Run conditions
-    //  note: There is no primary generator action object for "master"
-    //        run manager for multi-threaded mode.
-    const PrimaryGeneratorAction* generatorAction
-    = static_cast<const PrimaryGeneratorAction*>
-            (G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());
-    G4String runCondition;
-    if (generatorAction)
-    {
-        const G4ParticleGun* particleGun = generatorAction->GetParticleGun();
-        runCondition += particleGun->GetParticleDefinition()->GetParticleName();
-        runCondition += " of ";
-        G4double particleEnergy = particleGun->GetParticleEnergy();
-        runCondition += G4BestUnit(particleEnergy,"Energy");
-    }
-
-    // Print
-    //
-    if (IsMaster()) {
-        G4cout
-        << G4endl
-        << "--------------------End of Global Run-----------------------";
-    }
-    else {
-        G4cout
-        << G4endl
-        << "--------------------End of Local Run------------------------";
-    }
-
-    G4cout
-            << G4endl
-            << " The run consists of " << nofEvents << " "<< runCondition
-            << G4endl
-            << " Cumulated dose per run, in scoring volume : "
-            << G4BestUnit(dose,"Dose") << " rms = " << G4BestUnit(rmsDose,"Dose")
-            << G4endl
-            << " Number of electrons which stay into the solid : "
-            << KeptElectrons << " out of " << nofEvents
-            << G4endl
-            << "------------------------------------------------------------"
-            << G4endl
-            << G4endl;
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void RunAction::AddEdep(G4double edep)
-{
-  fEdep  += edep;
-  fEdep2 += edep*edep;
-}
-
-void RunAction::SetName(G4String st)
-{
-	name = st;
-}
-
-G4String RunAction::GetName()
-{
-	return name;
-}
-
-H5File *RunAction::GetOutputFile() {
-
-  if ( file == nullptr )   {
-
-	  file = new H5File(name.c_str(), H5F_ACC_TRUNC);
-
-  }
-
-  return file;
-}
-
-void RunAction::AddKeptElectron() {
-  KeptElectrons++;
-}
-
-G4int RunAction::GetKeptElectrons() {
-  return KeptElectrons;
-}
-
-void RunAction::setHeight(G4double h) {
-  currentHeight = h;
-}
-
-void RunAction::setMaterial(G4String m) {
-  currentMaterial = m;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

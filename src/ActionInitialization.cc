@@ -23,22 +23,23 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1ActionInitialization.cc 68058 2013-03-13 14:47:43Z gcosmo $
 //
-/// \file ActionInitialization.cc
+/// \file src/ActionInitialization.cc
 /// \brief Implementation of the ActionInitialization class
 
 #include "ActionInitialization.hh"
+
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
 #include "EventAction.hh"
+#include "SteppingVerbose.hh"
+#include "StackingAction.hh"
 #include "SteppingAction.hh"
 #include "TrackingAction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-ActionInitialization::ActionInitialization()
- : G4VUserActionInitialization()
+ActionInitialization::ActionInitialization() : G4VUserActionInitialization()
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -50,25 +51,26 @@ ActionInitialization::~ActionInitialization()
 
 void ActionInitialization::BuildForMaster() const
 {
-  RunAction* runAction = new RunAction;
-  SetUserAction(runAction);
+    SetUserAction(new RunAction);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void ActionInitialization::Build() const
 {
-  SetUserAction(new PrimaryGeneratorAction);
+    EventAction* event;
+    RunAction*   run;
+    SetUserAction(new PrimaryGeneratorAction);
+    SetUserAction(run = new RunAction);
+    SetUserAction(event = new EventAction);
+    SetUserAction(new StackingAction);
+    SetUserAction(new TrackingAction);
+    SetUserAction(new SteppingAction(run,event));
+} 
 
-  RunAction* runAction = new RunAction;
-  SetUserAction(runAction);
-  
-  EventAction* eventAction = new EventAction(runAction);
-  SetUserAction(eventAction);
-  
-  SetUserAction(new SteppingAction(eventAction));
-
-  SetUserAction(new TrackingAction(eventAction));
-}  
+G4VSteppingVerbose* ActionInitialization::InitializeSteppingVerbose() const
+{
+    return new SteppingVerbose();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

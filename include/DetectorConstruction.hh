@@ -23,51 +23,20 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1DetectorConstruction.hh 69565 2013-05-08 12:35:31Z gcosmo $
 //
-/// \file DetectorConstruction.hh
+/// \file include/DetectorConstruction.hh
 /// \brief Definition of the DetectorConstruction class
 
 #ifndef DetectorConstruction_h
 #define DetectorConstruction_h 1
 
+#include "DetectorConstructionBase.hh"
 #include "G4VUserDetectorConstruction.hh"
-#include "globals.hh"
-#include "DetectorMessenger.hh"
 
-class G4VPhysicalVolume;
-class G4LogicalVolume;
-
-/// Detector construction class to define materials and geometry.
-
-class DetectorConstruction : public G4VUserDetectorConstruction
+class DetectorConstruction : public DetectorConstructionBase
 {
-  public:
-    DetectorConstruction();
-    virtual ~DetectorConstruction();
-
-    virtual G4VPhysicalVolume* Construct();
-    
-    G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
-    G4VPhysicalVolume* GetPhysicalVolume() const { return fPhysicalVolume; }
-    void SetZ(G4double d);
-    G4double GetZ();
-    void RefreshVis();
-    void SetMat(G4String mat);
-    G4String GetMat();
-
-
-  protected:
-    G4LogicalVolume*  fScoringVolume;
-    G4VPhysicalVolume* fPhysicalVolume;
-    G4LogicalVolume* logicWorld;
-    G4double env_sizeXY;
-    G4double env_sizeZ;
-    DetectorMessenger* mes;
-    G4String material;
+public:
+    G4VPhysicalVolume *DefineVolumes();
 };
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 #endif
-

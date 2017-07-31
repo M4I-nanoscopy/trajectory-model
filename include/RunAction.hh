@@ -23,22 +23,12 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1RunAction.hh 93886 2015-11-03 08:28:26Z gcosmo $
 //
-/// \file RunAction.hh
+/// \file include/RunAction.hh
 /// \brief Definition of the RunAction class
 
 #ifndef RunAction_h
 #define RunAction_h 1
-
-#include "G4UserRunAction.hh"
-#include "G4Parameter.hh"
-#include "globals.hh"
-
-#include "H5Cpp.h"
-#ifndef H5_NO_NAMESPACE
-using namespace H5;
-#endif
 
 #include "G4UserRunAction.hh"
 #include "MpxDetector.hh"
@@ -49,46 +39,29 @@ class G4Timer;
 class HistoManager;
 class G4GenericMessenger;
 
-/// Run action class
-///
-/// In EndOfRunAction(), it calculates the dose in the selected volume 
-/// from the energy deposit accumulated via stepping and event actions.
-/// The computed dose is then printed on the screen.
+// Run action class
+
 
 class RunAction : public G4UserRunAction
+
 {
-  public:
+public:
     RunAction();
     virtual ~RunAction();
+
     virtual G4Run *GenerateRun();
-    // virtual G4Run* GenerateRun();
-    virtual void BeginOfRunAction(const G4Run*);
-    virtual void   EndOfRunAction(const G4Run*);
+    virtual void   BeginOfRunAction(const G4Run *);
+    virtual void   EndOfRunAction(const G4Run *);
 
-    void AddEdep (G4double edep);
-    H5File* GetOutputFile();
-    void SetName(G4String st);
-    G4String GetName();
-    void AddKeptElectron();
-    G4int GetKeptElectrons();
-    void setHeight(G4double h);
-    void setMaterial(G4String m);
-    void InitFile(G4double d);
 
-  private:
-    G4Parameter<G4double> fEdep;
-    G4Parameter<G4double> fEdep2;
-    H5File*file = nullptr;
-    Group* traj = nullptr;
-    G4String name;
-    G4double currentHeight;
-    G4String currentMaterial;
-    G4int KeptElectrons;
-    G4Timer *timer;
-    MpxDetector* detector;
-    HistoManager* histoManager;
-    G4GenericMessenger* fMessenger;
+private:
+  G4Timer *timer;
+  MpxDetector* detector;
+  HistoManager* histoManager;
+  G4GenericMessenger* fMessenger;
 };
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
 

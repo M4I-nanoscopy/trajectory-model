@@ -23,42 +23,45 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1PrimaryGeneratorAction.hh 90623 2015-06-05 09:24:30Z gcosmo $
-//
-/// \file PrimaryGeneratorAction.hh
+/// \file include/PrimaryGeneratorAction.hh
 /// \brief Definition of the PrimaryGeneratorAction class
+//
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #ifndef PrimaryGeneratorAction_h
 #define PrimaryGeneratorAction_h 1
 
 #include "G4VUserPrimaryGeneratorAction.hh"
+#include "G4GeneralParticleSource.hh"
+// #include "G4GeneralParticleSourceMessenger.hh"
 #include "G4ParticleGun.hh"
 #include "globals.hh"
 
-class G4ParticleGun;
-class G4Event;
-class G4Box;
+#include "G4UIcommand.hh"
 
-/// The primary generator action class with particle gun.
-///
-/// The default kinematic is a 6 MeV gamma, randomly distribued 
-/// in front of the phantom across 80% of the (X,Y) phantom size.
+class G4GenericMessenger;
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
-  public:
+public:
     PrimaryGeneratorAction();
-    virtual ~PrimaryGeneratorAction();
+    ~PrimaryGeneratorAction();
 
-    // method from the base class
-    virtual void GeneratePrimaries(G4Event*);         
-  
-    // method to access particle gun
-    const G4ParticleGun* GetParticleGun() const { return fParticleGun; }
-  
-  private:
-    G4ParticleGun*  fParticleGun; // pointer a to G4 gun class
-    G4Box* fEnvelopeBox;
+public:
+    void SetDefaultKinematic();
+    virtual
+    void GeneratePrimaries(G4Event *);
+
+    G4GeneralParticleSource *GetParticleGun() {
+        return fParticleGun;
+    }
+
+private:
+    G4GeneralParticleSource   *fParticleGun;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

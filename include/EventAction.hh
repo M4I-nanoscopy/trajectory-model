@@ -23,7 +23,6 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1EventAction.hh 93886 2015-11-03 08:28:26Z gcosmo $
 //
 /// \file EventAction.hh
 /// \brief Definition of the EventAction class
@@ -31,10 +30,6 @@
 #ifndef EventAction_h
 #define EventAction_h 1
 
-#include "G4UserEventAction.hh"
-#include "globals.hh"
-
-#include "H5Cpp.h"
 #include "G4UserEventAction.hh"
 
 #include "DetectorHit.hh"
@@ -44,62 +39,67 @@ class G4GenericMessenger;
 
 
 class G4Track;
-#ifndef H5_NO_NAMESPACE
-  using namespace H5;
-#endif
-
-const int   FSPACE_RANK = 2;    // Dataset rank as it is stored in the file
-const int   FSPACE_DIM1 = 4096;    // Dimension sizes of the dataset as it is
-const int   FSPACE_DIM2 = 7;
-
-class RunAction;
-
-/// Event action class
-///
-
+// Event action class
 class EventAction : public G4UserEventAction
 {
-  public:
-    EventAction(RunAction* runAction);
+public:
+    EventAction();
     virtual ~EventAction();
 
-    virtual void BeginOfEventAction(const G4Event* event);
-    virtual void EndOfEventAction(const G4Event* event);
+    virtual void  BeginOfEventAction(const G4Event *);
+    virtual void  EndOfEventAction(const G4Event *);
 
+    /**
+     * Print every X event
+     * \param value any positive integer
+     */
+    inline void SetPrintModulo(G4int value) {
+        fPrintModulo = value;
+    }
+    /**
+      * Add energy deposition and sum
+      * \param edep energy in step in keV
+      */
     inline void     AddEdep(G4double edep) {
-      fEdep += edep;
+        fEnergyPerEvent += edep;
     }
     /**
      * Get energy of the current event
      */
     inline G4double GetEdep() const {
-      return fEdep;
+        return fEnergyPerEvent;
     }
+private:
+    /**
+     * Hits collection
+     * \param hcID the hit ID
+     * \param event the current event
+     */
+    DetectorHitsCollection *GetHitsCollection(G4int hcID, 
+                                              const G4Event *event) const;
+    /**
+     * Prints primary event statistics
+     * \param absoEdep absolute energy deposition
+     * \param absoTrackLength absolute track length of primary track
+     */
+    void PrintEventStatistics(G4double absoEdep,
+                              G4double absoTrackLength) const;
 
-    void AddTrackStep(int step, G4double x, G4double y, G4double z, G4double t, G4double energy, G4double velocity, G4double length);
-    void setIsOut(bool b);
-    void setHasAlreadyHit(bool c);
-    bool getHasAlreadyHit();
-    bool getIsOut();
-
-  private:
-    RunAction* fRunAction;
-    G4double     fEdep;
-
-    DataSet* dataSet;
-    double *trajectory;
-    int maxStep;
-    bool isOut;
-    bool hasAlreadyHit;
-
+    /**
+     * 
+     * 
+     */
     G4int  fSensorHCID; //FIXME can be removed !?
     G4int  fPrintModulo;
     // the name of the digitizer
     G4String digitizerName;
+    // energy per event
+    G4double fEnergyPerEvent;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
 
-    
+

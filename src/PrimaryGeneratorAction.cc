@@ -23,109 +23,71 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1PrimaryGeneratorAction.cc 94307 2015-11-11 13:42:46Z gcosmo $
-//
 /// \file PrimaryGeneratorAction.cc
 /// \brief Implementation of the PrimaryGeneratorAction class
+//
+// $Id: PrimaryGeneratorAction.cc 67268 2013-02-13 11:38:40Z ihrivnac $
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include <DetectorConstruction.hh>
 #include "PrimaryGeneratorAction.hh"
 
-#include "G4LogicalVolumeStore.hh"
-#include "G4LogicalVolume.hh"
-#include "G4Box.hh"
-#include "G4RunManager.hh"
+#include "G4Event.hh"
 #include "G4ParticleGun.hh"
+#include "G4GeneralParticleSource.hh"
+#include "G4GeneralParticleSourceMessenger.hh"
+#include "G4ParticleTable.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
-#include "Randomize.hh"
-#include "G4Electron.hh"
+
+#include "HistoManager.hh"
+// #include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
-: G4VUserPrimaryGeneratorAction(),
-  fParticleGun(0),
-  fEnvelopeBox(0)
+    : G4VUserPrimaryGeneratorAction(),
+      fParticleGun(0)
 {
-  G4int n_particle = 1;
-  fParticleGun  = new G4ParticleGun(n_particle);
-    //fEnvelopeBox = new G4Box("Box",110*um,110*um,20*um);
-  // Finally, the processes are added to the particles' process manager:
-  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  G4String particleName;
-  G4ParticleDefinition* particle
-    = particleTable->FindParticle(particleName="e-");
-  // default particle kinematic
-  fParticleGun->SetParticleDefinition(particle);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
-  fParticleGun->SetParticleEnergy(200.*keV);
+    //G4cout << "DEBUG: initializing particle source" << G4endl;
+    fParticleGun  = new G4GeneralParticleSource();
+    SetDefaultKinematic();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
-  delete fParticleGun;
+    delete fParticleGun;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
+void PrimaryGeneratorAction::SetDefaultKinematic()
 {
-  //this function is called at the begining of each event
-  //
+    G4ParticleTable *particleTable = G4ParticleTable::GetParticleTable();
+    G4String particleName;
+    G4ParticleDefinition *particle
+        = particleTable->FindParticle(particleName = "e-");
+    fParticleGun->SetParticleDefinition(particle);
+//     fParticleGun->SetParticlePosition(G4ThreeVector(0,0,-10*mm));
+//     fParticleGun->SetParticlePosition(0,0,1);
 
-  // In order to avoid dependence of PrimaryGeneratorAction
-  // on DetectorConstruction class we get Envelope volume
-  // from G4LogicalVolumeStore.
-
-  G4double envSizeXY = 0;
-  G4double envSizeZ = 0;
-  if (!fEnvelopeBox) {
-    G4LogicalVolume *envLV
-            = G4LogicalVolumeStore::GetInstance()->GetVolume("Shape1");
-    if ( envLV ) fEnvelopeBox = dynamic_cast<G4Box*>(envLV->GetSolid());
-  }
-
-  if ( fEnvelopeBox ) {
-    envSizeXY = fEnvelopeBox->GetXHalfLength()*2.;
-    envSizeZ = fEnvelopeBox->GetZHalfLength()*2.;
-  }
-  else  {
-    G4ExceptionDescription msg;
-    msg << "Envelope volume of box shape not found.\n";
-    msg << "Perhaps you have changed geometry.\n";
-    msg << "The gun will be place at the center.";
-    G4Exception("PrimaryGeneratorAction::GeneratePrimaries()",
-     "MyCode0002",JustWarning,msg);
-  }
-  // let's choose some random points on the upper surface
-  /*G4float x = static_cast <G4float> (rand()) /
-          (static_cast <G4float> (RAND_MAX/envSizeXY));
-  G4float y = static_cast <G4float> (rand()) /
-          (static_cast <G4float> (RAND_MAX/envSizeXY));
-  fParticleGun->SetParticlePosition(G4ThreeVector(x,
-                                                  y,
-                                                  envSizeZ+700*um));*/
-  //G4double x0 = envSizeXY * G4UniformRand();
-  //G4double y0 = envSizeXY * G4UniformRand();
-    G4double x0 = envSizeXY * G4UniformRand();
-    G4double y0 = envSizeXY * G4UniformRand();
-  G4double z0 = 2. * envSizeZ;
-
-  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
-  /*G4double x0 = 2.5 * 55 * um;
-  G4double y0 = 2.5 * 55 * um;
-  G4double z0 = 10 * um;
-
-  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));*/
-  /*G4double x0 = 0;
-  G4double y0 = 0;
-  G4double z0 = 700 * um;
-
-  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));*/
-
-  fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
+{
+    fParticleGun->GeneratePrimaryVertex(anEvent);
+    
+    //G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
+    //G4PrimaryVertex* primaryVertex = anEvent->GetPrimaryVertex();
+    //G4PrimaryParticle* primaryParticle = primaryVertex->GetPrimary();
+    //G4double ke = primaryParticle->GetKineticEnergy();
+    //analysisManager->FillH1(4, ke);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+

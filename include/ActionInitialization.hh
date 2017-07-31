@@ -23,30 +23,25 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1ActionInitialization.hh 68058 2013-03-13 14:47:43Z gcosmo $
 //
-/// \file ActionInitialization.hh
-/// \brief Definition of the ActionInitialization class
+/// \file include/ActionInitialization.hh
+/// \brief ActionInitialization class
 
 #ifndef ActionInitialization_h
 #define ActionInitialization_h 1
 
 #include "G4VUserActionInitialization.hh"
 
-/// Action initialization class.
-
+// Action initialization class.
 class ActionInitialization : public G4VUserActionInitialization
 {
-  public:
+public:
     ActionInitialization();
     virtual ~ActionInitialization();
 
     virtual void BuildForMaster() const;
     virtual void Build() const;
+    virtual G4VSteppingVerbose* InitializeSteppingVerbose() const;
 };
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 #endif
-
-    
