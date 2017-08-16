@@ -56,7 +56,7 @@ DetectorConstruction::DetectorConstruction()
   fScoringVolume(0),
   fPhysicalVolume(0),
   logicWorld(0),
-  env_sizeXY(55*15*um),
+  env_sizeXY(55*4*um),
   env_sizeZ(300*um),
   material("G4_Si")
 {
