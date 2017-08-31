@@ -52,11 +52,9 @@ int main(int argc,char** argv)
 
   // Choose the Random engine
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
-  srand((uint) time(nullptr));
-  int r1 = rand(); //generate some random seeds
-  int r2 = rand();
-  G4String command1 = "/random/setSeeds ";
-  G4String command2 = std::to_string(r1)+" "+std::to_string(r2);
+  G4int seed = (G4int) time(NULL);
+  G4cout << "Seed:" << seed << G4endl;
+  G4Random::setTheSeed(seed);
 
   // Construct the default run manager
   //
@@ -87,7 +85,7 @@ int main(int argc,char** argv)
 
   // Get the pointer to the User Interface manager
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
-    UImanager->ApplyCommand(command1+command2); //set some random seeds
+
   // Process macro or start UI session
   //
   if ( ! ui ) {

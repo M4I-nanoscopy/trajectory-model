@@ -67,28 +67,28 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void EventAction::EndOfEventAction(const G4Event* event)
-{
-    if (event->GetEventID() < 1) {
-        fRunAction->InitFile(event->GetPrimaryVertex()->GetPrimary()->GetKineticEnergy());
-    }
-  if (!isOut && hasAlreadyHit) {// if the electron track ends into the solid,
-                                // we take this track into account
-      const H5std_string DATASET_NAME_TRAJ(
-              "/trajectories/" + std::to_string(fRunAction->GetKeptElectrons()));
-    // accumulate statistics in run action
-    fRunAction->AddKeptElectron();
-    fRunAction->AddEdep(fEdep);
-    // Get output file
-    H5File * file = fRunAction->GetOutputFile();
-    // Setup and write hdf5 dataset, using the EventID as dataset name
-    hsize_t fDim[] = {(hsize_t) maxStep, FSPACE_DIM2};
-    DataSpace fSpace(FSPACE_RANK, fDim);
-
-    dataSet = new DataSet(file->createDataSet(DATASET_NAME_TRAJ.c_str(), PredType::NATIVE_DOUBLE, fSpace));
-
-    dataSet->write(trajectory, PredType::NATIVE_DOUBLE, fSpace, fSpace);
+void EventAction::EndOfEventAction(const G4Event *event) {
+  if (event->GetEventID() < 1) {
+    fRunAction->InitFile(event->GetPrimaryVertex()->GetPrimary()->GetKineticEnergy());
   }
+  if (!isOut && hasAlreadyHit) {
+    fRunAction->AddKeptElectron();
+  }
+
+  const H5std_string DATASET_NAME_TRAJ("/trajectories/" + std::to_string(event->GetEventID()));
+
+  // accumulate statistics in run action
+  fRunAction->AddEdep(fEdep);
+
+  // Get output file
+  H5File *file = fRunAction->GetOutputFile();
+  // Setup and write hdf5 dataset, using the EventID as dataset name
+  hsize_t fDim[] = {(hsize_t) maxStep, FSPACE_DIM2};
+  DataSpace fSpace(FSPACE_RANK, fDim);
+
+  dataSet = new DataSet(file->createDataSet(DATASET_NAME_TRAJ.c_str(), PredType::NATIVE_DOUBLE, fSpace));
+
+  dataSet->write(trajectory, PredType::NATIVE_DOUBLE, fSpace, fSpace);
   delete trajectory;
   //delete dataSet;
 }
