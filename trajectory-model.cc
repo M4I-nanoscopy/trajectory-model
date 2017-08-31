@@ -28,23 +28,16 @@
 /// \file trajectory-model.cc
 /// \brief Main program
 
+#include <G4EmStandardPhysics_option3.hh>
 #include "DetectorConstruction.hh"
 #include "ActionInitialization.hh"
-#ifdef G4MULTITHREADED
-#include "G4MTRunManager.hh"
-#else
 #include "G4RunManager.hh"
-#endif
 #include "OutputMessenger.hh"
 #include "G4UImanager.hh"
 #include "QGSP_BERT.hh"
 #include "G4StepLimiterPhysics.hh"
-#include "DetectorMessenger.hh"
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
-#include "G4SystemOfUnits.hh"
-
-#include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -52,18 +45,18 @@ int main(int argc,char** argv)
 {
   // Detect interactive mode (if no arguments) and define UI session
   //
-  G4UIExecutive* ui = 0;
+  G4UIExecutive* ui = nullptr;
   if ( argc == 1 ) {
     ui = new G4UIExecutive(argc, argv);
   }
 
   // Choose the Random engine
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
-    srand(time(NULL));
-    int r1 = rand(); //generate some random seeds
-    int r2 = rand();
-    G4String command1 = "/random/setSeeds ";
-    G4String command2 = std::to_string(r1)+" "+std::to_string(r2);
+  srand((uint) time(nullptr));
+  int r1 = rand(); //generate some random seeds
+  int r2 = rand();
+  G4String command1 = "/random/setSeeds ";
+  G4String command2 = std::to_string(r1)+" "+std::to_string(r2);
 
   // Construct the default run manager
   //
@@ -76,9 +69,10 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(det);
 
   // Physics list
-  G4VModularPhysicsList* physicsList = new QGSP_BERT;
-  physicsList->RegisterPhysics(new G4StepLimiterPhysics());
+  G4VModularPhysicsList* physicsList = new G4VModularPhysicsList();
   physicsList->SetVerboseLevel(0);
+  physicsList->RegisterPhysics(new G4StepLimiterPhysics());
+  physicsList->RegisterPhysics(new G4EmStandardPhysics_option3(0));
   runManager->SetUserInitialization(physicsList);
 
   // User action initialization
